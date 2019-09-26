@@ -108,7 +108,7 @@ Except for the json files containing the word 'tree', all json files can be visu
 
 We expect no result from this search:
 ```bash
-python change_config.py --DB_CACHE True --DB_time 0  --use_cache True --add_Hs True
+python change_config.py --DB_CACHE True --DB_time 0  --use_cache True
 ```
 
 ```bash
@@ -142,7 +142,7 @@ The following command will extend the tree by 10 children. What that means is th
 Morevoer, all node scores (visits and values) are reinitialised, as they can change drastically by allowing new rules. Only the structure is conserved, which allows for much faster descent on already expanded nodes.
 We expect 1 pathway from this search.
 ```bash
-python change_config.py --DB_CACHE True --DB_time 0  --use_cache True --add_Hs True
+python change_config.py --DB_CACHE True --DB_time 0  --use_cache True
 ```
 
 ```bash
@@ -181,9 +181,9 @@ it is stored in that database.
 
 # Supplement finder
 
-The aim of the supplement_finder script is to find potential media supplements that would allow to make other pathways by simple media supplementation. It is currently limited to 1 supplement to avoid combinatorial explosion. It allows for verification of presence in a database of interest (here: Sigma), previously standardised under the same conditions as the Tree (with or without hydrogens/stereo). 
+The aim of the supplement_finder script is to find potential media supplements that would allow to make other pathways by simple media supplementation. It is currently limited to 1 supplement to avoid combinatorial explosion. It allows for verification of presence in a database of interest (here: Metanetx), previously standardised under the same conditions as the Tree (with or without hydrogens/stereo). 
 
-Please unzip the databases in data/supplement_finder/data before running this script.
+Please unzip the databases in data/supplement_finder/data before running this script, as well as the search tree in data/supplement_finder/tree_for_testing/TPA/pickles.
 
 Usage:
 ```bash
