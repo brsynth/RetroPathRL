@@ -1,0 +1,146 @@
+"""
+Contains the tree objects for visualisation and export
+"""
+
+# General utility packages
+import logging
+import csv
+import copy
+import json
+import sys
+
+# RP3 specific objects
+from compound import Compound
+from move import Move
+from chemical_compounds_state import ChemicalCompoundState
+from MCTS_node import MCTS_node
+# General configuration
+from config import *
+
+class Tree_viewer(object):
+    """
+    Tree_viewer object.
+    Has methods for quick visualisation as well as export to json
+    """
+    logger = logging.getLogger(__name__)
+
+    def __init__(self,
+                 file_to_save = "temporary_tree_viewer_json"):
+        """
+        Initialising a tree viewer object.
+        A Node has:
+        - level
+        - scores (total and average)
+        - visits
+        - terminal
+        - root
+        - a chemical state
+        - the id will be the chemical state and a number to id it
+        - whether it has a solved child
+        A Move:
+        - Biological score
+        - Chemical score
+        - EC numbers
+        - compound ID it applyes to
+        - smarts
+        - name
+        An edge links both
+        """
+        # Where to save the json
+        self.file_to_save = file_to_save
+        # For tree viewer json
+        self.nodes_nodes = []
+        self.nodes_transformations = []
+        self.edges = []
+
+    def set_file_to_save(self, file_to_save):
+        self.file_to_save = file_to_save
+
+    def add_node(self, node):
+        """
+        Adding a node object to the tree.
+        """
+        if node.terminal:
+            terminal = 1
+        else:
+            terminal = 0
+        if node.move is None:
+            root = 1
+        else:
+            root = 0
+        node_dict = {
+            'type': 'node',
+            'id': "node_{}".format(node.id),
+            'level': node.level,
+            'root': root,
+            'terminal': terminal,
+            'Names': str(node.state),  # If I want synonyms, keep them
+            'average_score': node.average_score,
+            'total_score': node.total_score,
+            'visits': node.visits,
+            'solved_child': node.has_a_solved_child
+        }
+        self.nodes_nodes.append({"data": node_dict})
+
+        if not node.move is None:
+            move_to_child = {
+                "target" : "move_{}".format(node.move.id),
+                "source" : "node_{}".format(node.id),
+                "id" : "{}_=>_{}".format("move_{}".format(node.move.id), "node_{}".format(node.id))
+            }
+            self.edges.append({"data": move_to_child})
+            if use_transpositions:
+                parent_nodes = transposition_table[node.parent.hash]
+                for parent in parent_nodes:
+                    parent_to_move = {
+                        "target" : "node_{}".format(parent.id),
+                        "source" : "move_{}".format(node.move.id),
+                        "id" : "{}_=>_{}".format("node_{}".format(parent.id), "move_{}".format(node.move.id))
+                    }
+                    self.edges.append({"data": parent_to_move})
+            else:
+                parent_to_move = {
+                    "target" : "node_{}".format(node.parent.id),
+                    "source" : "move_{}".format(node.move.id),
+                    "id" : "{}_=>_{}".format("node_{}".format(node.parent.id), "move_{}".format(node.move.id))
+                }
+                self.edges.append({"data": parent_to_move})
+            biological_score = node.move.biological_score
+            try:
+                diameter = int(node.move.rid.split("-")[3])
+            except:
+                diameter = 42
+            move_dict = {
+                'type': 'move',
+                'id': "move_{}".format(node.move.id),
+                "Rule ID": node.move.synonyms,
+                "EC number": node.move.EC_numbers,
+                "Reaction SMILES": node.move.rsmiles,
+                "Diameter": diameter,
+                "Score": biological_score,
+                "ChemicalScore": node.move.chemical_score,
+                "Name": node.move.name
+            }
+            self.nodes_transformations.append({"data": move_dict})
+
+    def jsonify_tree_viewer(self):
+        """
+        Use scope viewer to visualise pathways before the DBTL advances more.
+        THe json file is a dict composed of one item called elements.
+        The elements values is a dict composed of "nodes" and "edges"
+        Nodes is a list of compounds, or reactions, with:
+        """
+        pathway_as_dict = {"elements": {"nodes": self.nodes_nodes + self.nodes_transformations,
+                                        "edges": self.edges}}
+        with open(self.file_to_save, "w") as json_handler:
+            json.dump(pathway_as_dict, json_handler, indent = 2)
+
+
+def __cli():
+    """Command line interface. Was actually used to make quick
+    tests before implementing them in the testing file"""
+    print("CLI is not available for this module - tree viewing is automatically generated by Tree module")
+
+
+if __name__ == "__main__":
+    __cli()

@@ -1,0 +1,10 @@
+include chemistry_choices.md
+include data/compounds_to_add/*
+include data/sinks/*
+include data/supplement_finder/*
+include data/golden_dataset.csv
+include data/name_structure_toxicity.csv
+include expected_results/*
+include tests/*
+include utilities/*
+include README.md
