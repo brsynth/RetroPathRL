@@ -1,0 +1,282 @@
+03/09/2019 16:35:02 -- INFO -- Stating global parameters from configuration file
+03/09/2019 16:35:02 -- INFO -- Using retrosynthesis: True - using biosensor False
+03/09/2019 16:35:02 -- INFO -- Full search - no stopping at first result
+03/09/2019 16:35:02 -- INFO -- Setting the DB from config file: Installed package: True. Using cache DB: False; Replacing results: False
+03/09/2019 16:35:02 -- INFO -- Initialising an empty cache: {}; Using it: True
+03/09/2019 16:35:02 -- INFO -- -------------------Scoring configurations -------------------------
+03/09/2019 16:35:02 -- INFO -- Using biological cut off at 0.1
+03/09/2019 16:35:02 -- INFO -- Using substrate only cut off at 0.7
+03/09/2019 16:35:02 -- INFO -- Using chemical score cut off at 0.7
+03/09/2019 16:35:02 -- INFO -- -------------------MCTS configurations -------------------------
+03/09/2019 16:35:02 -- INFO -- Setting the minimal visit count for a node at 1
+03/09/2019 16:35:02 -- INFO -- Using RAVE: False
+03/09/2019 16:35:02 -- INFO -- -------------------Chemical configurations -------------------------
+03/09/2019 16:35:02 -- INFO -- Using explicit hydrogens : False
+03/09/2019 16:35:02 -- INFO -- Main layer was set to True. Sanitising state
+03/09/2019 16:35:02 -- INFO -- Main layer was set to True. Sanitising state
+03/09/2019 16:35:02 -- INFO -- Starting move obtention process with compound deoxiviolacein (O=C1NC(c2c[nH]c3ccccc23)=CC1=C1C(=O)Nc2ccccc21) at 1567521302.8307164
+03/09/2019 16:35:03 -- INFO -- 16 available rules
+03/09/2019 16:35:03 -- INFO -- For compound deoxiviolacein, matching moves are [OJUJNNKCVPCATE-UHFFFAOYSA-N-RR-02-8907c369787578b3-16-F-0, OJUJNNKCVPCATE-UHFFFAOYSA-N-RR-02-080125cbbc8beadc-16-F-0]
+03/09/2019 16:35:03 -- INFO -- Caching results for compound OJUJNNKCVPCATE-UHFFFAOYSA-N. The cache contained 0
+03/09/2019 16:35:03 -- INFO -- Calculated moves in 0.530163049697876 for compound OJUJNNKCVPCATE-UHFFFAOYSA-N - without caching
+03/09/2019 16:35:03 -- INFO -- Progressive bias with FPU of 0
+03/09/2019 16:35:03 -- INFO -- ---------------Beginning of search informations------------------ 
+UCT policy is : Biochemical_UCT_1 
+Rollout policy is : Rollout_policy_random_uniform_on_biochemical_multiplication_score 
+Rewarding policy is : Penalty is -1 and full state reward is 2 
+Maximum number of iterations 1000 
+Tree search started running at 16h 35min 3s 
+Your tree search is currently running ... 
+ 
+
+03/09/2019 16:35:03 -- INFO -- Performing iteration 0 out of 1000
+03/09/2019 16:35:03 -- INFO -- Adding a child with move OJUJNNKCVPCATE-UHFFFAOYSA-N-RR-02-8907c369787578b3-16-F-0 to node 
+Count: 0/ Score : 0/ Children: 0/ Terminal : False
+|deoxiviolacein|
+03/09/2019 16:35:03 -- INFO -- Starting move obtention process with compound SFLGFRJGKHRRID-UHFFFAOYSA-N (O=C(O)c1[nH]c(-c2c[nH]c3ccccc23)cc1-c1c[nH]c2ccccc12) at 1567521303.3747206
+03/09/2019 16:35:03 -- INFO -- 16 available rules
+03/09/2019 16:35:03 -- INFO -- For compound SFLGFRJGKHRRID-UHFFFAOYSA-N, matching moves are [SFLGFRJGKHRRID-UHFFFAOYSA-N-RR-02-74068b9f6b2efdc1-16-F-0]
+03/09/2019 16:35:03 -- INFO -- Caching results for compound SFLGFRJGKHRRID-UHFFFAOYSA-N. The cache contained 1
+03/09/2019 16:35:03 -- INFO -- Calculated moves in 0.48645806312561035 for compound SFLGFRJGKHRRID-UHFFFAOYSA-N - without caching
+03/09/2019 16:35:03 -- INFO -- Progressive bias with FPU of 0
+03/09/2019 16:35:03 -- INFO -- Starting move obtention process with compound SFLGFRJGKHRRID-UHFFFAOYSA-N (O=C(O)c1[nH]c(-c2c[nH]c3ccccc23)cc1-c1c[nH]c2ccccc12) at 1567521303.8680027
+03/09/2019 16:35:03 -- INFO -- Retrieved moves in 0.0001678466796875 for compound SFLGFRJGKHRRID-UHFFFAOYSA-N - with caching
+03/09/2019 16:35:03 -- INFO -- Starting move obtention process with compound CKBGWXPNAUCVQQ-UHFFFAOYSA-N (N=C(C(=O)O)C(c1c[nH]c2ccccc12)C(C(=N)C(=O)O)c1c[nH]c2ccccc12) at 1567521303.871094
+03/09/2019 16:35:04 -- INFO -- 8 available rules
+03/09/2019 16:35:04 -- INFO -- For compound CKBGWXPNAUCVQQ-UHFFFAOYSA-N, matching moves are [CKBGWXPNAUCVQQ-UHFFFAOYSA-N-RR-02-47e9577f4cb98f97-16-F-0, CKBGWXPNAUCVQQ-UHFFFAOYSA-N-RR-02-c7c634c728e8acdd-16-F-0]
+03/09/2019 16:35:04 -- INFO -- Caching results for compound CKBGWXPNAUCVQQ-UHFFFAOYSA-N. The cache contained 2
+03/09/2019 16:35:04 -- INFO -- Calculated moves in 0.605851411819458 for compound CKBGWXPNAUCVQQ-UHFFFAOYSA-N - without caching
+03/09/2019 16:35:04 -- INFO -- Starting move obtention process with compound FZDVNXHYGMEEDT-UHFFFAOYSA-N (O=C(O)c1[nH]c(C(=O)O)c(-c2c[nH]c3ccccc23)c1-c1c[nH]c2ccccc12) at 1567521304.4835765
+03/09/2019 16:35:04 -- INFO -- 8 available rules
+03/09/2019 16:35:05 -- INFO -- For compound FZDVNXHYGMEEDT-UHFFFAOYSA-N, matching moves are [FZDVNXHYGMEEDT-UHFFFAOYSA-N-RR-02-039d8d1cd15ca575-16-F-0, FZDVNXHYGMEEDT-UHFFFAOYSA-N-RR-02-398ca48edd48f2db-16-F-0]
+03/09/2019 16:35:05 -- INFO -- Caching results for compound FZDVNXHYGMEEDT-UHFFFAOYSA-N. The cache contained 3
+03/09/2019 16:35:05 -- INFO -- Calculated moves in 0.5863409042358398 for compound FZDVNXHYGMEEDT-UHFFFAOYSA-N - without caching
+03/09/2019 16:35:05 -- INFO -- Starting move obtention process with compound LKYWXXAVLLVJAS-UHFFFAOYSA-N (N=C(Cc1c[nH]c2ccccc12)C(=O)O) at 1567521305.0780683
+03/09/2019 16:35:05 -- INFO -- 96 available rules
+03/09/2019 16:35:05 -- INFO -- For compound LKYWXXAVLLVJAS-UHFFFAOYSA-N, matching moves are [LKYWXXAVLLVJAS-UHFFFAOYSA-N-RR-02-0c9c5a5559e132c7-16-F-0]
+03/09/2019 16:35:05 -- INFO -- Caching results for compound LKYWXXAVLLVJAS-UHFFFAOYSA-N. The cache contained 4
+03/09/2019 16:35:05 -- INFO -- Calculated moves in 0.7559623718261719 for compound LKYWXXAVLLVJAS-UHFFFAOYSA-N - without caching
+03/09/2019 16:35:05 -- INFO -- Rollout results are 0.6666666666666666, False
+03/09/2019 16:35:05 -- INFO -- Adding a child with move OJUJNNKCVPCATE-UHFFFAOYSA-N-RR-02-080125cbbc8beadc-16-F-0 to node 
+Count: 1/ Score : 0.67/ Children: 1/ Terminal : False
+|deoxiviolacein|
+03/09/2019 16:35:05 -- INFO -- Starting move obtention process with compound YNGCGCMGWQFYIK-UHFFFAOYSA-N (O=C(O)c1[nH]c(-c2c[nH]c3ccccc23)cc1-c1c(O)[nH]c2ccccc12) at 1567521305.8484263
+03/09/2019 16:35:06 -- INFO -- 24 available rules
+03/09/2019 16:35:06 -- INFO -- For compound YNGCGCMGWQFYIK-UHFFFAOYSA-N, matching moves are [YNGCGCMGWQFYIK-UHFFFAOYSA-N-RR-02-e11967fcfec22fc6-12-F-0]
+03/09/2019 16:35:06 -- INFO -- Caching results for compound YNGCGCMGWQFYIK-UHFFFAOYSA-N. The cache contained 5
+03/09/2019 16:35:06 -- INFO -- Calculated moves in 0.6037564277648926 for compound YNGCGCMGWQFYIK-UHFFFAOYSA-N - without caching
+03/09/2019 16:35:06 -- INFO -- Progressive bias with FPU of 0
+03/09/2019 16:35:06 -- INFO -- Starting move obtention process with compound SFLGFRJGKHRRID-UHFFFAOYSA-N (O=C(O)c1[nH]c(-c2c[nH]c3ccccc23)cc1-c1c[nH]c2ccccc12) at 1567521306.458831
+03/09/2019 16:35:06 -- INFO -- Retrieved moves in 0.0001456737518310547 for compound SFLGFRJGKHRRID-UHFFFAOYSA-N - with caching
+03/09/2019 16:35:06 -- INFO -- Starting move obtention process with compound CKBGWXPNAUCVQQ-UHFFFAOYSA-N (N=C(C(=O)O)C(c1c[nH]c2ccccc12)C(C(=N)C(=O)O)c1c[nH]c2ccccc12) at 1567521306.461755
+03/09/2019 16:35:06 -- INFO -- Retrieved moves in 0.00015211105346679688 for compound CKBGWXPNAUCVQQ-UHFFFAOYSA-N - with caching
+03/09/2019 16:35:06 -- INFO -- Starting move obtention process with compound LKYWXXAVLLVJAS-UHFFFAOYSA-N (N=C(Cc1c[nH]c2ccccc12)C(=O)O) at 1567521306.4652908
+03/09/2019 16:35:06 -- INFO -- Retrieved moves in 0.00012350082397460938 for compound LKYWXXAVLLVJAS-UHFFFAOYSA-N - with caching
+03/09/2019 16:35:06 -- INFO -- Rollout results are 2, True
+03/09/2019 16:35:06 -- INFO -- Udapted solved Node 	Move name: OJUJNNKCVPCATE-UHFFFAOYSA-N-RR-02-8907c369787578b3-16-F-0/ Biological score : 1.0/ Chemical score: 1.0
+	Count: 2/ Score : 0.67/ Children: 0/ Terminal : False
+	|MYMOFIZGZYHOMD-UHFFFAOYSA-N- solved|SFLGFRJGKHRRID-UHFFFAOYSA-N| for the first time at iteration 1
+03/09/2019 16:35:06 -- INFO -- Udapted solved Node Count: 2/ Score : 0.67/ Children: 2/ Terminal : False
+|deoxiviolacein| for the first time at iteration 1
+03/09/2019 16:35:06 -- INFO -- Adding a child with move YNGCGCMGWQFYIK-UHFFFAOYSA-N-RR-02-e11967fcfec22fc6-12-F-0 to node 
+	Move name: OJUJNNKCVPCATE-UHFFFAOYSA-N-RR-02-080125cbbc8beadc-16-F-0/ Biological score : 1.0/ Chemical score: 1.0
+	Count: 0/ Score : 0/ Children: 0/ Terminal : False
+	|MYMOFIZGZYHOMD-UHFFFAOYSA-N- solved|YNGCGCMGWQFYIK-UHFFFAOYSA-N|
+03/09/2019 16:35:06 -- INFO -- Starting move obtention process with compound SFLGFRJGKHRRID-UHFFFAOYSA-N (O=C(O)c1[nH]c(-c2c[nH]c3ccccc23)cc1-c1c[nH]c2ccccc12) at 1567521306.4785655
+03/09/2019 16:35:06 -- INFO -- Retrieved moves in 5.984306335449219e-05 for compound SFLGFRJGKHRRID-UHFFFAOYSA-N - with caching
+03/09/2019 16:35:06 -- INFO -- Progressive bias with FPU of 0
+03/09/2019 16:35:06 -- INFO -- Starting move obtention process with compound SFLGFRJGKHRRID-UHFFFAOYSA-N (O=C(O)c1[nH]c(-c2c[nH]c3ccccc23)cc1-c1c[nH]c2ccccc12) at 1567521306.480182
+03/09/2019 16:35:06 -- INFO -- Retrieved moves in 5.078315734863281e-05 for compound SFLGFRJGKHRRID-UHFFFAOYSA-N - with caching
+03/09/2019 16:35:06 -- INFO -- Starting move obtention process with compound CKBGWXPNAUCVQQ-UHFFFAOYSA-N (N=C(C(=O)O)C(c1c[nH]c2ccccc12)C(C(=N)C(=O)O)c1c[nH]c2ccccc12) at 1567521306.481387
+03/09/2019 16:35:06 -- INFO -- Retrieved moves in 5.793571472167969e-05 for compound CKBGWXPNAUCVQQ-UHFFFAOYSA-N - with caching
+03/09/2019 16:35:06 -- INFO -- Starting move obtention process with compound FZDVNXHYGMEEDT-UHFFFAOYSA-N (O=C(O)c1[nH]c(C(=O)O)c(-c2c[nH]c3ccccc23)c1-c1c[nH]c2ccccc12) at 1567521306.4829097
+03/09/2019 16:35:06 -- INFO -- Retrieved moves in 5.793571472167969e-05 for compound FZDVNXHYGMEEDT-UHFFFAOYSA-N - with caching
+03/09/2019 16:35:06 -- INFO -- Starting move obtention process with compound CKBGWXPNAUCVQQ-UHFFFAOYSA-N (N=C(C(=O)O)C(c1c[nH]c2ccccc12)C(C(=N)C(=O)O)c1c[nH]c2ccccc12) at 1567521306.484972
+03/09/2019 16:35:06 -- INFO -- Retrieved moves in 5.626678466796875e-05 for compound CKBGWXPNAUCVQQ-UHFFFAOYSA-N - with caching
+03/09/2019 16:35:06 -- INFO -- Rollout results are 0.6666666666666666, False
+03/09/2019 16:35:06 -- INFO -- Adding a child with move SFLGFRJGKHRRID-UHFFFAOYSA-N-RR-02-74068b9f6b2efdc1-16-F-0 to node 
+		Move name: YNGCGCMGWQFYIK-UHFFFAOYSA-N-RR-02-e11967fcfec22fc6-12-F-0/ Biological score : 1.0/ Chemical score: 0.77
+		Count: 1/ Score : 0.67/ Children: 0/ Terminal : False
+		|MYMOFIZGZYHOMD-UHFFFAOYSA-N- solved|SFLGFRJGKHRRID-UHFFFAOYSA-N|
+03/09/2019 16:35:06 -- INFO -- Starting move obtention process with compound CKBGWXPNAUCVQQ-UHFFFAOYSA-N (N=C(C(=O)O)C(c1c[nH]c2ccccc12)C(C(=N)C(=O)O)c1c[nH]c2ccccc12) at 1567521306.4896176
+03/09/2019 16:35:06 -- INFO -- Retrieved moves in 4.38690185546875e-05 for compound CKBGWXPNAUCVQQ-UHFFFAOYSA-N - with caching
+03/09/2019 16:35:06 -- INFO -- Progressive bias with FPU of 0
+03/09/2019 16:35:06 -- INFO -- Starting move obtention process with compound CKBGWXPNAUCVQQ-UHFFFAOYSA-N (N=C(C(=O)O)C(c1c[nH]c2ccccc12)C(C(=N)C(=O)O)c1c[nH]c2ccccc12) at 1567521306.4907374
+03/09/2019 16:35:06 -- INFO -- Retrieved moves in 3.719329833984375e-05 for compound CKBGWXPNAUCVQQ-UHFFFAOYSA-N - with caching
+03/09/2019 16:35:06 -- INFO -- Starting move obtention process with compound LKYWXXAVLLVJAS-UHFFFAOYSA-N (N=C(Cc1c[nH]c2ccccc12)C(=O)O) at 1567521306.4919703
+03/09/2019 16:35:06 -- INFO -- Retrieved moves in 4.482269287109375e-05 for compound LKYWXXAVLLVJAS-UHFFFAOYSA-N - with caching
+03/09/2019 16:35:06 -- INFO -- Rollout results are 2, True
+03/09/2019 16:35:06 -- INFO -- Udapted solved Node 			Move name: SFLGFRJGKHRRID-UHFFFAOYSA-N-RR-02-74068b9f6b2efdc1-16-F-0/ Biological score : 1.0/ Chemical score: 1.0
+			Count: 1/ Score : 0/ Children: 0/ Terminal : False
+			|CKBGWXPNAUCVQQ-UHFFFAOYSA-N|MYMOFIZGZYHOMD-UHFFFAOYSA-N- solved| for the first time at iteration 3
+03/09/2019 16:35:06 -- INFO -- Udapted solved Node 		Move name: YNGCGCMGWQFYIK-UHFFFAOYSA-N-RR-02-e11967fcfec22fc6-12-F-0/ Biological score : 1.0/ Chemical score: 0.77
+		Count: 2/ Score : 0.67/ Children: 1/ Terminal : False
+		|MYMOFIZGZYHOMD-UHFFFAOYSA-N- solved|SFLGFRJGKHRRID-UHFFFAOYSA-N| for the first time at iteration 3
+03/09/2019 16:35:06 -- INFO -- Udapted solved Node 	Move name: OJUJNNKCVPCATE-UHFFFAOYSA-N-RR-02-080125cbbc8beadc-16-F-0/ Biological score : 1.0/ Chemical score: 1.0
+	Count: 2/ Score : 0.67/ Children: 1/ Terminal : False
+	|MYMOFIZGZYHOMD-UHFFFAOYSA-N- solved|YNGCGCMGWQFYIK-UHFFFAOYSA-N| for the first time at iteration 3
+03/09/2019 16:35:06 -- INFO -- Adding a child with move CKBGWXPNAUCVQQ-UHFFFAOYSA-N-RR-02-47e9577f4cb98f97-16-F-0 to node 
+			Move name: SFLGFRJGKHRRID-UHFFFAOYSA-N-RR-02-74068b9f6b2efdc1-16-F-0/ Biological score : 1.0/ Chemical score: 1.0
+			Count: 1/ Score : 2.0/ Children: 0/ Terminal : False
+			|CKBGWXPNAUCVQQ-UHFFFAOYSA-N|MYMOFIZGZYHOMD-UHFFFAOYSA-N- solved|
+03/09/2019 16:35:06 -- INFO -- Starting move obtention process with compound LKYWXXAVLLVJAS-UHFFFAOYSA-N (N=C(Cc1c[nH]c2ccccc12)C(=O)O) at 1567521306.4990718
+03/09/2019 16:35:06 -- INFO -- Retrieved moves in 4.029273986816406e-05 for compound LKYWXXAVLLVJAS-UHFFFAOYSA-N - with caching
+03/09/2019 16:35:06 -- INFO -- Progressive bias with FPU of 0
+03/09/2019 16:35:06 -- INFO -- Starting move obtention process with compound LKYWXXAVLLVJAS-UHFFFAOYSA-N (N=C(Cc1c[nH]c2ccccc12)C(=O)O) at 1567521306.500143
+03/09/2019 16:35:06 -- INFO -- Retrieved moves in 3.409385681152344e-05 for compound LKYWXXAVLLVJAS-UHFFFAOYSA-N - with caching
+03/09/2019 16:35:06 -- INFO -- Rollout results are 2, True
+03/09/2019 16:35:06 -- INFO -- Udapted solved Node 				Move name: CKBGWXPNAUCVQQ-UHFFFAOYSA-N-RR-02-47e9577f4cb98f97-16-F-0/ Biological score : 1.0/ Chemical score: 1.0
+				Count: 1/ Score : 0/ Children: 0/ Terminal : False
+				|LKYWXXAVLLVJAS-UHFFFAOYSA-N|MYMOFIZGZYHOMD-UHFFFAOYSA-N- solved| for the first time at iteration 4
+03/09/2019 16:35:06 -- INFO -- Adding a child with move SFLGFRJGKHRRID-UHFFFAOYSA-N-RR-02-74068b9f6b2efdc1-16-F-0 to node 
+	Move name: OJUJNNKCVPCATE-UHFFFAOYSA-N-RR-02-8907c369787578b3-16-F-0/ Biological score : 1.0/ Chemical score: 1.0
+	Count: 2/ Score : 1.33/ Children: 0/ Terminal : False
+	|MYMOFIZGZYHOMD-UHFFFAOYSA-N- solved|SFLGFRJGKHRRID-UHFFFAOYSA-N|
+03/09/2019 16:35:06 -- INFO -- Starting move obtention process with compound CKBGWXPNAUCVQQ-UHFFFAOYSA-N (N=C(C(=O)O)C(c1c[nH]c2ccccc12)C(C(=N)C(=O)O)c1c[nH]c2ccccc12) at 1567521306.5056353
+03/09/2019 16:35:06 -- INFO -- Retrieved moves in 3.719329833984375e-05 for compound CKBGWXPNAUCVQQ-UHFFFAOYSA-N - with caching
+03/09/2019 16:35:06 -- INFO -- Progressive bias with FPU of 0
+03/09/2019 16:35:06 -- INFO -- Starting move obtention process with compound CKBGWXPNAUCVQQ-UHFFFAOYSA-N (N=C(C(=O)O)C(c1c[nH]c2ccccc12)C(C(=N)C(=O)O)c1c[nH]c2ccccc12) at 1567521306.5066972
+03/09/2019 16:35:06 -- INFO -- Retrieved moves in 3.457069396972656e-05 for compound CKBGWXPNAUCVQQ-UHFFFAOYSA-N - with caching
+03/09/2019 16:35:06 -- INFO -- Starting move obtention process with compound LKYWXXAVLLVJAS-UHFFFAOYSA-N (N=C(Cc1c[nH]c2ccccc12)C(=O)O) at 1567521306.507869
+03/09/2019 16:35:06 -- INFO -- Retrieved moves in 0.0001742839813232422 for compound LKYWXXAVLLVJAS-UHFFFAOYSA-N - with caching
+03/09/2019 16:35:06 -- INFO -- Rollout results are 2, True
+03/09/2019 16:35:06 -- INFO -- Udapted solved Node 		Move name: SFLGFRJGKHRRID-UHFFFAOYSA-N-RR-02-74068b9f6b2efdc1-16-F-0/ Biological score : 1.0/ Chemical score: 1.0
+		Count: 1/ Score : 0/ Children: 0/ Terminal : False
+		|CKBGWXPNAUCVQQ-UHFFFAOYSA-N|MYMOFIZGZYHOMD-UHFFFAOYSA-N- solved| for the first time at iteration 5
+03/09/2019 16:35:06 -- INFO -- Adding a child with move CKBGWXPNAUCVQQ-UHFFFAOYSA-N-RR-02-c7c634c728e8acdd-16-F-0 to node 
+			Move name: SFLGFRJGKHRRID-UHFFFAOYSA-N-RR-02-74068b9f6b2efdc1-16-F-0/ Biological score : 1.0/ Chemical score: 1.0
+			Count: 2/ Score : 2.0/ Children: 1/ Terminal : False
+			|CKBGWXPNAUCVQQ-UHFFFAOYSA-N|MYMOFIZGZYHOMD-UHFFFAOYSA-N- solved|
+03/09/2019 16:35:06 -- INFO -- Starting move obtention process with compound FZDVNXHYGMEEDT-UHFFFAOYSA-N (O=C(O)c1[nH]c(C(=O)O)c(-c2c[nH]c3ccccc23)c1-c1c[nH]c2ccccc12) at 1567521306.5141506
+03/09/2019 16:35:06 -- INFO -- Retrieved moves in 4.696846008300781e-05 for compound FZDVNXHYGMEEDT-UHFFFAOYSA-N - with caching
+03/09/2019 16:35:06 -- INFO -- Progressive bias with FPU of 0
+03/09/2019 16:35:06 -- INFO -- Starting move obtention process with compound LKYWXXAVLLVJAS-UHFFFAOYSA-N (N=C(Cc1c[nH]c2ccccc12)C(=O)O) at 1567521306.5157616
+03/09/2019 16:35:06 -- INFO -- Retrieved moves in 0.0003101825714111328 for compound LKYWXXAVLLVJAS-UHFFFAOYSA-N - with caching
+03/09/2019 16:35:06 -- INFO -- Rollout results are 2, True
+03/09/2019 16:35:06 -- INFO -- Adding a child with move CKBGWXPNAUCVQQ-UHFFFAOYSA-N-RR-02-47e9577f4cb98f97-16-F-0 to node 
+		Move name: SFLGFRJGKHRRID-UHFFFAOYSA-N-RR-02-74068b9f6b2efdc1-16-F-0/ Biological score : 1.0/ Chemical score: 1.0
+		Count: 1/ Score : 2.0/ Children: 0/ Terminal : False
+		|CKBGWXPNAUCVQQ-UHFFFAOYSA-N|MYMOFIZGZYHOMD-UHFFFAOYSA-N- solved|
+03/09/2019 16:35:06 -- INFO -- Starting move obtention process with compound LKYWXXAVLLVJAS-UHFFFAOYSA-N (N=C(Cc1c[nH]c2ccccc12)C(=O)O) at 1567521306.520708
+03/09/2019 16:35:06 -- INFO -- Retrieved moves in 5.054473876953125e-05 for compound LKYWXXAVLLVJAS-UHFFFAOYSA-N - with caching
+03/09/2019 16:35:06 -- INFO -- Progressive bias with FPU of 0
+03/09/2019 16:35:06 -- INFO -- Starting move obtention process with compound LKYWXXAVLLVJAS-UHFFFAOYSA-N (N=C(Cc1c[nH]c2ccccc12)C(=O)O) at 1567521306.521799
+03/09/2019 16:35:06 -- INFO -- Retrieved moves in 3.8623809814453125e-05 for compound LKYWXXAVLLVJAS-UHFFFAOYSA-N - with caching
+03/09/2019 16:35:06 -- INFO -- Rollout results are 2, True
+03/09/2019 16:35:06 -- INFO -- Udapted solved Node 			Move name: CKBGWXPNAUCVQQ-UHFFFAOYSA-N-RR-02-47e9577f4cb98f97-16-F-0/ Biological score : 1.0/ Chemical score: 1.0
+			Count: 1/ Score : 0/ Children: 0/ Terminal : False
+			|LKYWXXAVLLVJAS-UHFFFAOYSA-N|MYMOFIZGZYHOMD-UHFFFAOYSA-N- solved| for the first time at iteration 7
+03/09/2019 16:35:06 -- INFO -- Adding a child with move FZDVNXHYGMEEDT-UHFFFAOYSA-N-RR-02-039d8d1cd15ca575-16-F-0 to node 
+				Move name: CKBGWXPNAUCVQQ-UHFFFAOYSA-N-RR-02-c7c634c728e8acdd-16-F-0/ Biological score : 0.28/ Chemical score: 1.0
+				Count: 0/ Score : 0/ Children: 0/ Terminal : False
+				|FZDVNXHYGMEEDT-UHFFFAOYSA-N|MYMOFIZGZYHOMD-UHFFFAOYSA-N- solved|QGZKDVFQNNGYKY-UHFFFAOYSA-N- solved|
+03/09/2019 16:35:06 -- INFO -- Starting move obtention process with compound LKYWXXAVLLVJAS-UHFFFAOYSA-N (N=C(Cc1c[nH]c2ccccc12)C(=O)O) at 1567521306.528308
+03/09/2019 16:35:06 -- INFO -- Retrieved moves in 5.125999450683594e-05 for compound LKYWXXAVLLVJAS-UHFFFAOYSA-N - with caching
+03/09/2019 16:35:06 -- INFO -- Progressive bias with FPU of 0
+03/09/2019 16:35:06 -- INFO -- Starting move obtention process with compound LKYWXXAVLLVJAS-UHFFFAOYSA-N (N=C(Cc1c[nH]c2ccccc12)C(=O)O) at 1567521306.5300534
+03/09/2019 16:35:06 -- INFO -- Retrieved moves in 9.131431579589844e-05 for compound LKYWXXAVLLVJAS-UHFFFAOYSA-N - with caching
+03/09/2019 16:35:06 -- INFO -- Rollout results are 2, True
+03/09/2019 16:35:06 -- INFO -- Udapted solved Node 					Move name: FZDVNXHYGMEEDT-UHFFFAOYSA-N-RR-02-039d8d1cd15ca575-16-F-0/ Biological score : 0.43/ Chemical score: 1.0
+					Count: 1/ Score : 0/ Children: 0/ Terminal : False
+					|LKYWXXAVLLVJAS-UHFFFAOYSA-N|MYMOFIZGZYHOMD-UHFFFAOYSA-N- solved|QGZKDVFQNNGYKY-UHFFFAOYSA-N- solved| for the first time at iteration 8
+03/09/2019 16:35:06 -- INFO -- Udapted solved Node 				Move name: CKBGWXPNAUCVQQ-UHFFFAOYSA-N-RR-02-c7c634c728e8acdd-16-F-0/ Biological score : 0.28/ Chemical score: 1.0
+				Count: 1/ Score : 0/ Children: 1/ Terminal : False
+				|FZDVNXHYGMEEDT-UHFFFAOYSA-N|MYMOFIZGZYHOMD-UHFFFAOYSA-N- solved|QGZKDVFQNNGYKY-UHFFFAOYSA-N- solved| for the first time at iteration 8
+03/09/2019 16:35:06 -- INFO -- Adding a child with move CKBGWXPNAUCVQQ-UHFFFAOYSA-N-RR-02-c7c634c728e8acdd-16-F-0 to node 
+		Move name: SFLGFRJGKHRRID-UHFFFAOYSA-N-RR-02-74068b9f6b2efdc1-16-F-0/ Biological score : 1.0/ Chemical score: 1.0
+		Count: 2/ Score : 2.0/ Children: 1/ Terminal : False
+		|CKBGWXPNAUCVQQ-UHFFFAOYSA-N|MYMOFIZGZYHOMD-UHFFFAOYSA-N- solved|
+03/09/2019 16:35:06 -- INFO -- Starting move obtention process with compound FZDVNXHYGMEEDT-UHFFFAOYSA-N (O=C(O)c1[nH]c(C(=O)O)c(-c2c[nH]c3ccccc23)c1-c1c[nH]c2ccccc12) at 1567521306.5387115
+03/09/2019 16:35:06 -- INFO -- Retrieved moves in 7.319450378417969e-05 for compound FZDVNXHYGMEEDT-UHFFFAOYSA-N - with caching
+03/09/2019 16:35:06 -- INFO -- Progressive bias with FPU of 0
+03/09/2019 16:35:06 -- INFO -- Starting move obtention process with compound LKYWXXAVLLVJAS-UHFFFAOYSA-N (N=C(Cc1c[nH]c2ccccc12)C(=O)O) at 1567521306.5403926
+03/09/2019 16:35:06 -- INFO -- Retrieved moves in 0.00021076202392578125 for compound LKYWXXAVLLVJAS-UHFFFAOYSA-N - with caching
+03/09/2019 16:35:06 -- INFO -- Rollout results are 2, True
+03/09/2019 16:35:06 -- INFO -- Looping move in node |FZDVNXHYGMEEDT-UHFFFAOYSA-N|MYMOFIZGZYHOMD-UHFFFAOYSA-N- solved|QGZKDVFQNNGYKY-UHFFFAOYSA-N- solved|-4 for move FZDVNXHYGMEEDT-UHFFFAOYSA-N-RR-02-398ca48edd48f2db-16-F-0
+03/09/2019 16:35:06 -- INFO -- Starting move obtention process with compound FZDVNXHYGMEEDT-UHFFFAOYSA-N (O=C(O)c1[nH]c(C(=O)O)c(-c2c[nH]c3ccccc23)c1-c1c[nH]c2ccccc12) at 1567521306.5442455
+03/09/2019 16:35:06 -- INFO -- Retrieved moves in 6.818771362304688e-05 for compound FZDVNXHYGMEEDT-UHFFFAOYSA-N - with caching
+03/09/2019 16:35:06 -- INFO -- Starting move obtention process with compound LKYWXXAVLLVJAS-UHFFFAOYSA-N (N=C(Cc1c[nH]c2ccccc12)C(=O)O) at 1567521306.5459018
+03/09/2019 16:35:06 -- INFO -- Retrieved moves in 5.602836608886719e-05 for compound LKYWXXAVLLVJAS-UHFFFAOYSA-N - with caching
+03/09/2019 16:35:06 -- INFO -- Rollout results are 2, True
+03/09/2019 16:35:06 -- INFO -- Adding a child with move FZDVNXHYGMEEDT-UHFFFAOYSA-N-RR-02-039d8d1cd15ca575-16-F-0 to node 
+			Move name: CKBGWXPNAUCVQQ-UHFFFAOYSA-N-RR-02-c7c634c728e8acdd-16-F-0/ Biological score : 0.28/ Chemical score: 1.0
+			Count: 0/ Score : 0/ Children: 0/ Terminal : False
+			|FZDVNXHYGMEEDT-UHFFFAOYSA-N|MYMOFIZGZYHOMD-UHFFFAOYSA-N- solved|QGZKDVFQNNGYKY-UHFFFAOYSA-N- solved|
+03/09/2019 16:35:06 -- INFO -- Starting move obtention process with compound LKYWXXAVLLVJAS-UHFFFAOYSA-N (N=C(Cc1c[nH]c2ccccc12)C(=O)O) at 1567521306.5522373
+03/09/2019 16:35:06 -- INFO -- Retrieved moves in 6.818771362304688e-05 for compound LKYWXXAVLLVJAS-UHFFFAOYSA-N - with caching
+03/09/2019 16:35:06 -- INFO -- Progressive bias with FPU of 0
+03/09/2019 16:35:06 -- INFO -- Starting move obtention process with compound LKYWXXAVLLVJAS-UHFFFAOYSA-N (N=C(Cc1c[nH]c2ccccc12)C(=O)O) at 1567521306.5538359
+03/09/2019 16:35:06 -- INFO -- Retrieved moves in 0.00013256072998046875 for compound LKYWXXAVLLVJAS-UHFFFAOYSA-N - with caching
+03/09/2019 16:35:06 -- INFO -- Rollout results are 2, True
+03/09/2019 16:35:06 -- INFO -- Udapted solved Node 				Move name: FZDVNXHYGMEEDT-UHFFFAOYSA-N-RR-02-039d8d1cd15ca575-16-F-0/ Biological score : 0.43/ Chemical score: 1.0
+				Count: 1/ Score : 0/ Children: 0/ Terminal : False
+				|LKYWXXAVLLVJAS-UHFFFAOYSA-N|MYMOFIZGZYHOMD-UHFFFAOYSA-N- solved|QGZKDVFQNNGYKY-UHFFFAOYSA-N- solved| for the first time at iteration 11
+03/09/2019 16:35:06 -- INFO -- Udapted solved Node 			Move name: CKBGWXPNAUCVQQ-UHFFFAOYSA-N-RR-02-c7c634c728e8acdd-16-F-0/ Biological score : 0.28/ Chemical score: 1.0
+			Count: 1/ Score : 0/ Children: 1/ Terminal : False
+			|FZDVNXHYGMEEDT-UHFFFAOYSA-N|MYMOFIZGZYHOMD-UHFFFAOYSA-N- solved|QGZKDVFQNNGYKY-UHFFFAOYSA-N- solved| for the first time at iteration 11
+03/09/2019 16:35:06 -- INFO -- Adding a child with move LKYWXXAVLLVJAS-UHFFFAOYSA-N-RR-02-0c9c5a5559e132c7-16-F-0 to node 
+				Move name: CKBGWXPNAUCVQQ-UHFFFAOYSA-N-RR-02-47e9577f4cb98f97-16-F-0/ Biological score : 1.0/ Chemical score: 1.0
+				Count: 2/ Score : 2.0/ Children: 0/ Terminal : False
+				|LKYWXXAVLLVJAS-UHFFFAOYSA-N|MYMOFIZGZYHOMD-UHFFFAOYSA-N- solved|
+03/09/2019 16:35:06 -- INFO -- Progressive bias with FPU of 0
+03/09/2019 16:35:06 -- INFO -- Pathway is found at iteration 12
+03/09/2019 16:35:06 -- INFO -- Udapted solved Node 					Move name: LKYWXXAVLLVJAS-UHFFFAOYSA-N-RR-02-0c9c5a5559e132c7-16-F-0/ Biological score : 0.45/ Chemical score: 1.0
+					Count: 1/ Score : 0/ Children: 0/ Terminal : True
+					|MYMOFIZGZYHOMD-UHFFFAOYSA-N- solved|QIVBCDIJIAJPQS-UHFFFAOYSA-N- solved| for the first time at iteration 12
+03/09/2019 16:35:06 -- INFO -- Looping move in node |FZDVNXHYGMEEDT-UHFFFAOYSA-N|MYMOFIZGZYHOMD-UHFFFAOYSA-N- solved|QGZKDVFQNNGYKY-UHFFFAOYSA-N- solved|-3 for move FZDVNXHYGMEEDT-UHFFFAOYSA-N-RR-02-398ca48edd48f2db-16-F-0
+03/09/2019 16:35:06 -- INFO -- Starting move obtention process with compound FZDVNXHYGMEEDT-UHFFFAOYSA-N (O=C(O)c1[nH]c(C(=O)O)c(-c2c[nH]c3ccccc23)c1-c1c[nH]c2ccccc12) at 1567521306.5692198
+03/09/2019 16:35:06 -- INFO -- Retrieved moves in 5.555152893066406e-05 for compound FZDVNXHYGMEEDT-UHFFFAOYSA-N - with caching
+03/09/2019 16:35:06 -- INFO -- Starting move obtention process with compound LKYWXXAVLLVJAS-UHFFFAOYSA-N (N=C(Cc1c[nH]c2ccccc12)C(=O)O) at 1567521306.5708997
+03/09/2019 16:35:06 -- INFO -- Retrieved moves in 5.626678466796875e-05 for compound LKYWXXAVLLVJAS-UHFFFAOYSA-N - with caching
+03/09/2019 16:35:06 -- INFO -- Rollout results are 2, True
+03/09/2019 16:35:06 -- INFO -- Adding a child with move LKYWXXAVLLVJAS-UHFFFAOYSA-N-RR-02-0c9c5a5559e132c7-16-F-0 to node 
+			Move name: CKBGWXPNAUCVQQ-UHFFFAOYSA-N-RR-02-47e9577f4cb98f97-16-F-0/ Biological score : 1.0/ Chemical score: 1.0
+			Count: 2/ Score : 2.0/ Children: 0/ Terminal : False
+			|LKYWXXAVLLVJAS-UHFFFAOYSA-N|MYMOFIZGZYHOMD-UHFFFAOYSA-N- solved|
+03/09/2019 16:35:06 -- INFO -- Progressive bias with FPU of 0
+03/09/2019 16:35:06 -- INFO -- Pathway is found at iteration 15
+03/09/2019 16:35:06 -- INFO -- Udapted solved Node 				Move name: LKYWXXAVLLVJAS-UHFFFAOYSA-N-RR-02-0c9c5a5559e132c7-16-F-0/ Biological score : 0.45/ Chemical score: 1.0
+				Count: 1/ Score : 0/ Children: 0/ Terminal : True
+				|MYMOFIZGZYHOMD-UHFFFAOYSA-N- solved|QIVBCDIJIAJPQS-UHFFFAOYSA-N- solved| for the first time at iteration 15
+03/09/2019 16:35:06 -- INFO -- Adding a child with move LKYWXXAVLLVJAS-UHFFFAOYSA-N-RR-02-0c9c5a5559e132c7-16-F-0 to node 
+					Move name: FZDVNXHYGMEEDT-UHFFFAOYSA-N-RR-02-039d8d1cd15ca575-16-F-0/ Biological score : 0.43/ Chemical score: 1.0
+					Count: 1/ Score : 2.0/ Children: 0/ Terminal : False
+					|LKYWXXAVLLVJAS-UHFFFAOYSA-N|MYMOFIZGZYHOMD-UHFFFAOYSA-N- solved|QGZKDVFQNNGYKY-UHFFFAOYSA-N- solved|
+03/09/2019 16:35:06 -- INFO -- Progressive bias with FPU of 0
+03/09/2019 16:35:06 -- INFO -- Pathway is found at iteration 82
+03/09/2019 16:35:06 -- INFO -- Udapted solved Node 						Move name: LKYWXXAVLLVJAS-UHFFFAOYSA-N-RR-02-0c9c5a5559e132c7-16-F-0/ Biological score : 0.45/ Chemical score: 1.0
+						Count: 1/ Score : 0/ Children: 0/ Terminal : True
+						|MYMOFIZGZYHOMD-UHFFFAOYSA-N- solved|QGZKDVFQNNGYKY-UHFFFAOYSA-N- solved|QIVBCDIJIAJPQS-UHFFFAOYSA-N- solved| for the first time at iteration 82
+03/09/2019 16:35:06 -- INFO -- Adding a child with move LKYWXXAVLLVJAS-UHFFFAOYSA-N-RR-02-0c9c5a5559e132c7-16-F-0 to node 
+				Move name: FZDVNXHYGMEEDT-UHFFFAOYSA-N-RR-02-039d8d1cd15ca575-16-F-0/ Biological score : 0.43/ Chemical score: 1.0
+				Count: 1/ Score : 2.0/ Children: 0/ Terminal : False
+				|LKYWXXAVLLVJAS-UHFFFAOYSA-N|MYMOFIZGZYHOMD-UHFFFAOYSA-N- solved|QGZKDVFQNNGYKY-UHFFFAOYSA-N- solved|
+03/09/2019 16:35:06 -- INFO -- Progressive bias with FPU of 0
+03/09/2019 16:35:06 -- INFO -- Pathway is found at iteration 85
+03/09/2019 16:35:06 -- INFO -- Udapted solved Node 					Move name: LKYWXXAVLLVJAS-UHFFFAOYSA-N-RR-02-0c9c5a5559e132c7-16-F-0/ Biological score : 0.45/ Chemical score: 1.0
+					Count: 1/ Score : 0/ Children: 0/ Terminal : True
+					|MYMOFIZGZYHOMD-UHFFFAOYSA-N- solved|QGZKDVFQNNGYKY-UHFFFAOYSA-N- solved|QIVBCDIJIAJPQS-UHFFFAOYSA-N- solved| for the first time at iteration 85
+03/09/2019 16:35:06 -- INFO -- Performing iteration 100 out of 1000
+03/09/2019 16:35:06 -- INFO -- Performing iteration 200 out of 1000
+03/09/2019 16:35:06 -- INFO -- Performing iteration 300 out of 1000
+03/09/2019 16:35:06 -- INFO -- Performing iteration 400 out of 1000
+03/09/2019 16:35:06 -- INFO -- Performing iteration 500 out of 1000
+03/09/2019 16:35:06 -- INFO -- Performing iteration 600 out of 1000
+03/09/2019 16:35:06 -- INFO -- Performing iteration 700 out of 1000
+03/09/2019 16:35:06 -- INFO -- Performing iteration 800 out of 1000
+03/09/2019 16:35:06 -- INFO -- Performing iteration 900 out of 1000
+03/09/2019 16:35:06 -- INFO -- ---------------End of search informations------------------ 
+Tree search finished running at 16h 35min 6s 
+Your tree search took 3.9e+00s 
+ 
+Time was spent in selection: 1.2e-02s, expansion: 1.2e+00s, rollout: 2.0e+00s, update: 2.1e-02s 
+CONGRATULATIONS, THATS A WIN
+03/09/2019 16:35:06 -- INFO -- At the end of this tree search, the cache contains 6
+03/09/2019 16:35:06 -- WARNING -- RECAP TIME_EXECUTION=3.58
+03/09/2019 16:35:06 -- WARNING -- RECAP STOP_REASON=iteration
+03/09/2019 16:35:06 -- WARNING -- RECAP NUMBER_ITERATION=999
+03/09/2019 16:35:06 -- INFO -- According to Wikipedia, choosing the pathway with the most visists 
+ This could be replaced by the best score
+03/09/2019 16:35:07 -- INFO -- Found 4 pathways for deoxiviolacein
+03/09/2019 16:35:07 -- INFO -- 4 pathways were found
+03/09/2019 16:35:07 -- INFO -- At the end of this tree search, the cache contains 6
