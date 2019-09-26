@@ -188,7 +188,7 @@ Please unzip the databases in data/supplement_finder/data before running this sc
 Usage:
 ```bash
 python supplement_finder.py --folder_tree_to_complete data/supplement_finder/tree_for_testing/TPA \
---database_address data/supplement_finder/data/sigma_extracted_inchikeys.json \
+--database_address data/supplement_finder/data/metanetx_extracted_inchikeys.json \
 --folder_to_save testing_supplement_finder/TPA
 ```
 
