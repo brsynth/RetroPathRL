@@ -1,0 +1,28 @@
+{
+  "elements": {
+    "nodes": [
+      {
+        "data": {
+          "SMILES": "[H]C(=O)C([H])([H])C([H])([H])[H]",
+          "inSink": 1,
+          "isSource": 1,
+          "InChI": "InChI=1S/C3H6O/c1-2-3-4/h3H,2H2,1H3",
+          "Names": [
+            "821",
+            "NBBJYMSMWIIQGU-UHFFFAOYSA-N",
+            "Propanal"
+          ],
+          "id": "NBBJYMSMWIIQGU-UHFFFAOYSA-N",
+          "type": "compound",
+          "Rule ID": null,
+          "EC number": null,
+          "Reaction SMILES": null,
+          "Diameter": null,
+          "Score": null,
+          "Iteration": null
+        }
+      }
+    ],
+    "edges": []
+  }
+}
