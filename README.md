@@ -201,10 +201,10 @@ python supplement_finder.py --folder_tree_to_complete data/supplement_finder/tre
 # Files organisation
 
 - Each file will contain its own class.
-- Firing routines are taken from Thomas' reactor package.
+- Firing routines are taken from T.D.' reactor package.
 - Tests are in a separate folder and have filenames starting with `test` prefix, as well as class names starting with Test.
 - Data for the tests is also in the Tests folder.
-- DB is taken from Thomas' DBcache.
+- DB is taken from T.D.' DBcache.
 - Config file contains a number of global parameters needed in various scripts, mostly to decide which features to use (score cut-offs, DB, caching, progressive widening etc)
 
 Important:
