@@ -48,7 +48,7 @@ while rules in json format with ECFPS (optional) will be in `[data_path]/rules`
 
 Run the following commands:
 ```bash
-python calculate_rule_sets_similarity.py --rule_address_with_H /mnt/hdd/mkoch/data/retrorules_11_06_19/mnx_20190524/nostereo_hs/rule/aroaam_final/rules_rall.tsv --rule_address_without_H /mnt/hdd/mkoch/data/retrorules_11_06_19/mnx_20190524/nostereo_nohs/rule/aroaam_final/rules_rall.tsv
+python calculate_rule_sets_similarity.py --rule_address_with_H your_rule_address --rule_address_without_H your_rule_address
 python calculate_organisms.py
 ```
 
