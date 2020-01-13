@@ -5,9 +5,9 @@ The aim of this project is to run a Monte Carlo Tree Search to perform bio-retro
 The role of each script is detailed below.
 Scripts can generally be run from the command line, and have detailed comments for each function.
 
-Detailed docs are in document_all_options.md.
+Detailed docs are in [document_all_options.md](document_all_options.md).
 
-Chemoinformatics choices are detailed in chemistry_choices.md.
+Chemoinformatics choices are detailed in [chemistry_choices.md](chemistry_choices.md).
 
 # Setting conda environment
 
@@ -96,12 +96,12 @@ Expected result from this command is a folder named 'expected_results' containin
 - json files called deoxiviolacein_N.json, with N from 1 to 4: files containing pathways under json format. There is no ordering of those files.
 - deoxiviolacein_best.json: contains the best pathway (ie: with the most visits)
 - deoxiviolacein_full_scope.json: contains all pathways in the same json file.
-- deoxiviolacein_full_tree_for_MCTS.json: contains the Tree under json format. This allows visualisation node by node using our tree viewer available at WRITE.
+- deoxiviolacein_full_tree_for_MCTS.json: contains the Tree under json format. This allows visualisation node by node using our tree viewer available at [https://github.com/brsynth/scope-viewer](https://github.com/brsynth/scope-viewer).
 - deoxiviolacein_iteration_N.json: contains the pathway found at iteration N. Folder should contain 4 such files.
 - pickles is a folder containing tree_end_search.pkl: the full pickled tree. This can be used for tree extension or analysis.
 - results.csv contains the configuration and the results from this configuration (STOP_REASON should be iteration here)
 - tree.log contains execution logs.
-Except for the json files containing the word 'tree', all json files can be visualised using our scope viewer available at WRITE.
+Except for the json files containing the word 'tree', all json files can be visualised using our scope viewer available at [https://github.com/brsynth/scope-viewer](https://github.com/brsynth/scope-viewer).
 
 
 # Example for extension and 'normal' search
