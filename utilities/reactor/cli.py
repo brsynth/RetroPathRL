@@ -143,6 +143,8 @@ class RuleBurner(object):
             self._pool = mp.Pool(processes=1)
             raise e
         except Exception as e:
+            kill(self._pool)
+            self._pool = mp.Pool(processes=1)
             raise e
         return ans, exec_time
 
