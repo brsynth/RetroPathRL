@@ -35,7 +35,7 @@ conda install scikit-learn=0.19.1
 For using a database to cache results, you can find it on GitHub:
 ```bash
 conda install pymongo
-git clone https://github.com/brsynth/rp3_cache.git
+git clone https://github.com/brsynth/rp3_dcache.git
 ```
 Then run `pip install -e .` at the root of the downloaded package.
 

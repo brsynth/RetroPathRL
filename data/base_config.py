@@ -3,8 +3,8 @@ the aim of this file is to store configuration parameters, notably for the DB.
 It replaces what I previously wanted to define as 'global'
 """
 try:
-    from rp3_cache.Manager import Manager  # In house module
-    from rp3_cache.Utils import make_document_id, as_document, rdmols_from_document
+    from rp3_dcache.Manager import Manager  # In house module
+    from rp3_dcache.Utils import make_document_id, as_document, rdmols_from_document
     dcache_installed = True
 except ModuleNotFoundError:
     dcache_installed = False
