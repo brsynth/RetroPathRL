@@ -60,7 +60,7 @@ def kill(pool):
     try:
         pool._inqueue._rlock.release()
     except ValueError as e:
-        logging.error(e)
+        logging.warning(e)
     pool.terminate()
 
 
