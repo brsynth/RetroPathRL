@@ -60,24 +60,34 @@ def worker_standard_results(kwargs):
 
 def _ask_DB(DB_CACHE, DB_REPLACE, rule_id, substrate_id):
     """
-    Querries the DB for results when available.
-    Retunrs None, None otherwise.
+    Queries the DB for results when available.
+
+    @param DB_CACHE (bool): switch to use a database to cache fire results
+    @param DB_REPLACE (bool): switch that indicates if results have to be overwritten
+    @param rule_id (str): reaction rule ID
+    @param substrate_id (str): substrate ID
+    @returns ({'found': str, 'list_rdmols': [], 'list_stoechiometry': []}): reply dictionary
     """
     if DB_CACHE and not DB_REPLACE:
         # Look for result
         document_id = make_document_id(rule_id=rule_id, substrate_id=substrate_id)
         document = CACHE_MGR.find(document_id)
-        # Rebuild rdmols
+        # If results are in DB
         if document is not None:
-            # print("Import document from dB {}".format(document))
-            rdmols, list_stoechiometry = rdmols_from_document(document, build_from="inchi", add_hs=True)
-        else:
-            rdmols = None
-            list_stoechiometry = None
-    else:
-        rdmols = None
-        list_stoechiometry = None
-    return(rdmols, list_stoechiometry)
+            # Rebuild rdmols & return
+            list_rdmols, list_stoechiometry = rdmols_from_document(document, build_from="inchi", add_hs=True)
+            return {
+                'found': True,
+                'list_rdmols': list_rdmols,
+                'list_stoechiometry': list_stoechiometry
+            }
+    # In all other cases
+    return {
+        'found': False,
+        'list_rdmols': [],
+        'list_stoechiometry': []
+    }
+
 
 def _moves_from_rdmols(original_compound, rdmols, move, main_layer,
                        chemical_scorer, clean_up, stereo, max_moves, fire_timeout,
@@ -92,8 +102,8 @@ def _moves_from_rdmols(original_compound, rdmols, move, main_layer,
         list_stoechiometry= []
     else:
         list_stoechiometry = list_stoechiometry
-    if rdmols is None:
-        return(cleaned_rdmols, list_of_moves, list_stoechiometry)
+    if not len(rdmols):
+        return cleaned_rdmols, list_of_moves, list_stoechiometry
     else:
         original_substrates_list = move.original_substrates_list
         original_products_list_list = move.original_products_list_list
@@ -159,13 +169,12 @@ def calculate_from_available_rules(arguments):
     main_layer = substrate_info["main_layer"]
     chemical_scorer = substrate_info["chemical_scorer"]
 
-    rdmols_from_DB, list_stoechiometry = _ask_DB(DB_CACHE = DB_CACHE,
-                            DB_REPLACE = DB_REPLACE,
-                            rule_id = rule_id,
-                            substrate_id=substrate_id)
+    db_reply = _ask_DB(DB_CACHE=DB_CACHE, DB_REPLACE=DB_REPLACE, rule_id=rule_id, substrate_id=substrate_id)
+    rdmols_from_DB = db_reply['list_rdmols']
+    list_stoechiometry = db_reply['list_stoechiometry']
 
     # rdmols_from_DB = None
-    if rdmols_from_DB is None:
+    if not db_reply['found']:
         # Initilise the rule
         rsmarts = rule_characteristics["Rule_SMARTS"]
         try:
@@ -752,12 +761,11 @@ class Compound(object):
                 # If reach number of moves, stop looking
                 if len(matching_moves) >= self.max_moves:
                     break
-                rdmols_from_DB, list_stoechiometry = _ask_DB(DB_CACHE = DB_CACHE,
-                                                              DB_REPLACE = DB_REPLACE,
-                                                              rule_id = rule_id,
-                                                              substrate_id=self.InChIKey)
 
-                if rdmols_from_DB is None:
+                # Give a chance with the DB cache
+                db_reply = _ask_DB(DB_CACHE=DB_CACHE, DB_REPLACE=DB_REPLACE, rule_id=rule_id, substrate_id=self.InChIKey)
+
+                if not db_reply['found']:
                     # Force calculation of the move with rdkit and chemistry
                     # Initilise the rdkit rule
                     start_application_time = time.time()
@@ -785,20 +793,22 @@ class Compound(object):
                             rdmols, failed = ans
                         except TimeoutError as e:
                             self.logger.warning(e)
-                            rdmols = None
+                            rdmols = []
                         #  rdmols, failed = standardize_results(ans, add_hs=add_Hs, rm_stereo=not self.stereo)  # !!!! add_hs=False To be used only to fill the DB
                         clean_up = True
+                        list_stoechiometry = []
                     else:
-                        rdmols = None
+                        rdmols = []
+                        list_stoechiometry = []
                 else:
-                    rdmols = rdmols_from_DB
+                    rdmols = db_reply['list_rdmols']
                     clean_up = False
                     move = Move(rsmart = rule_characteristics["Rule_SMARTS"],
                                 rid = rule_id,
                                 compound_id = self.InChIKey,
                                 biological_score = rule_characteristics["biological_score"],
                                 EC_number= rule_characteristics["EC_number"])
-                # If rdmols is still None, then it's because the rule doesn't apply
+                # If rdmols is still empty, then it's because the rule doesn't apply
                 original_substrates_list = rule_characteristics["substrate_ECFP"]
                 original_products_list_list = rule_characteristics["products_ECFP"]
                 try:
@@ -823,7 +833,7 @@ class Compound(object):
                                 matching_moves.append(move_inside_set)
                     end_time = time.time()
 
-                    if DB_CACHE and (DB_REPLACE or rdmols_from_DB is None) and (end_time - start_time >=DB_time): # could add something about time for execution here
+                    if DB_CACHE and (DB_REPLACE or not db_reply['found']) and (end_time - start_time >=DB_time): # could add something about time for execution here
                         # Format document
                         # Here, check it's not empty.
                         list_list_inchikeys = [move.product_list for move in list_of_moves]
