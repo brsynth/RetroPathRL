@@ -850,7 +850,7 @@ class Compound(object):
                         CACHE_MGR.insert(document)
                         # total_clean_up = total_clean_up + time.time() - clean_up_start
                 except UnboundLocalError as e:
-                    self.logger.warning("Error {} when trying rule {} on compound {}. Moving to next rule".format(e, rule_id, self))
+                    self.logger.critical("Error {} when trying rule {} on compound {}. Moving to next rule".format(e, rule_id, self), exc_info=True)
             self.logger.info("For compound {}, matching moves are {}".format(self, matching_moves))
             if use_cache:
                 self.logger.info("Caching results for compound {}. The cache contained {}".format(self.InChIKey, len(home_made_cache.keys())))
