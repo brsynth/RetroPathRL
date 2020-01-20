@@ -802,6 +802,7 @@ class Compound(object):
                         list_stoechiometry = []
                 else:
                     rdmols = db_reply['list_rdmols']
+                    list_stoechiometry = db_reply['list_stoechiometry']
                     clean_up = False
                     move = Move(rsmart = rule_characteristics["Rule_SMARTS"],
                                 rid = rule_id,
