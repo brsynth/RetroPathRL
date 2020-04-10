@@ -9,7 +9,9 @@ Detailed docs are in [document_all_options.md](document_all_options.md).
 
 Chemoinformatics choices are detailed in [chemistry_choices.md](chemistry_choices.md).
 
-# Setting conda environment
+# Installation
+
+## Setting conda environment
 
 ```bash
 conda create --name MCTS python=3.6
@@ -24,20 +26,27 @@ pip install -e .
 ```
 at the root of the package.
 
+## Visualization of results
 Results can be visualised using the stand-alone Scope Viewer available on GitHub at:
 ```bash
 git clone https://github.com/brsynth/scope-viewer.git
 ```
+
+## Toxicity calculator
 For using the toxicity calculator:
 ```bash
 conda install scikit-learn=0.19.1
 ```
+
+## DB cache
 For using a database to cache results, you can find it on GitHub:
 ```bash
 conda install pymongo
 git clone https://github.com/brsynth/rp3_dcache.git
 ```
 Then run `pip install -e .` at the root of the downloaded package.
+Check detailed instructions in the DB cache repository for instructions
+on how to set up and run the cache database.
 
 # Set-up data files
 
