@@ -124,7 +124,9 @@ def __run__(rule_address_with_H = None, rule_address_without_H = None, rm_stereo
                                                                                 current_characteristics["Reaction_ID"]))
         else:
             current_characteristics["Substrate_ID"].append(new_characteristics["Substrate_ID"][0])
+            current_characteristics["substrate_ECFP"].append(new_characteristics["substrate_ECFP"][0])
             current_characteristics["Product_IDs"].append(new_characteristics["Product_IDs"][0])
+            current_characteristics["products_ECFP"].append(new_characteristics["products_ECFP"][0])
         # Biological score:
         if current_characteristics["biological_score"] != new_characteristics["biological_score"]:
             logging.info("Different biological scores for {}".format(rule_id))
