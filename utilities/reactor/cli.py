@@ -60,7 +60,7 @@ def kill(pool):
     try:
         pool._inqueue._rlock.release()
     except ValueError as e:
-        logging.error(e)
+        logging.warning(e)
     pool.terminate()
 
 
@@ -143,6 +143,8 @@ class RuleBurner(object):
             self._pool = mp.Pool(processes=1)
             raise e
         except Exception as e:
+            kill(self._pool)
+            self._pool = mp.Pool(processes=1)
             raise e
         return ans, exec_time
 
