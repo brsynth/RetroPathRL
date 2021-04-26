@@ -1,0 +1,15 @@
+# Usual stuff
+.DS_Store
+__pycache__
+*.egg-info
+
+# Data
+data/*/*.log
+data/*/*.pkl
+
+# Test data
+tests/generated_jsons/pipecolate_iteration_0.json
+
+# IDE
+.vscode
+.idea
