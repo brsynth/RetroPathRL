@@ -11,6 +11,8 @@ Chemoinformatics choices are detailed in [chemistry_choices.md](chemistry_choice
 
 # Installation
 
+__Compatibility notice__: RetroPathRL has been developped and tested using Linux and MacOS platforms. It is expected that RetroPathRL will __not work__ properly using Windows OS.
+
 ## Setting conda environment
 
 ```bash
