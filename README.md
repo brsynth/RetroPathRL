@@ -1,9 +1,11 @@
 
 # Monte Carlo Tree Search presentation
 
-The aim of this project is to run a Monte Carlo Tree Search to perform bio-retrosynthesis, compatible with mono-component reaction rules from RetroRules.
+The aim of this project is to run a Monte Carlo Tree Search to perform bio-retrosynthesis, compatible with mono-component reaction rules from RetroRules ([https://retrorules.org](https://retrorules.org)).
 The role of each script is detailed below.
 Scripts can generally be run from the command line, and have detailed comments for each function.
+
+Reaction rules are available at [https://retrorules.org/dl](https://retrorules.org/dl).
 
 Detailed docs are in [document_all_options.md](document_all_options.md).
 
