@@ -6,7 +6,6 @@ This module loads calculates organisms
 
 # General utilities
 import logging
-import pickle
 import os
 import csv
 import sys
@@ -15,11 +14,10 @@ import argparse
 from config import *
 
 # RP3 specific objects
-from compound import Compound, unpickle
+from compound import Compound
 from chemical_compounds_state import ChemicalCompoundState
-from rdkit.Chem import AllChem
-from utilities.reactor.Utils import standardize_chemical, standardize_results, handle_results, ChemConversionError
-from utilities.reactor.cli import worker_match, worker_fire, kill, RuleConversionError
+from utilities.reactor.Utils import ChemConversionError
+
 
 def __run__():
     def import_organism_from_csv(csv_file, add_Hs = True):
