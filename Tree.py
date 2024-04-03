@@ -13,14 +13,11 @@ import argparse
 import pickle
 import string
 import numpy as np
-import json
 import csv
 
 import random
 
 # RP3 specific packages
-from move import Move  # only necessary for tracking class below
-from rdkit import Chem  # only necessary for tracking below
 from compound import Compound, unpickle, CompoundDefinitionException, ChemConversionError
 from chemical_compounds_state import ChemicalCompoundState
 from MCTS_node import MCTS_node
@@ -30,7 +27,7 @@ from UCT_policies import Biochemical_UCT_1, Nature_UCT, Classical_UCT_RAVE, Clas
     Biochemical_UCT_with_toxicity
 from Rollout_policies import Rollout_policy_first, Rollout_policy_random_uniform_on_biochemical_multiplication_score, Rollout_policy_random_uniform
 from rewarding import Basic_Rollout_Reward, RolloutRewards
-from rule_sets_examples import applicable_rules_mixed_dict, applicable_rules_10_dict
+from rule_sets_examples import applicable_rules_10_dict
 from rule_sets_similarity import get_rules_and_score, full_rules_forward_H, full_rules_retro_H, full_rules_forward_no_H, \
     full_rules_retro_no_H
 from pathway import Pathway
