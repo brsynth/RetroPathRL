@@ -18,36 +18,43 @@ __Compatibility notice__: RetroPathRL has been developped and tested using Linux
 ## Setting conda environment
 
 ```bash
-conda create --name MCTS python=3.6
-source activate MCTS
-conda install --channel rdkit rdkit=2019.03.1.0
-conda install pytest
-conda install pyyaml
+conda create --name mcts python=3.9
+conda activate mcts
+conda install --channel conda-forge rdkit=2021
+conda install pytest pyyaml
 ```
-After cloning this Git repo, please run
+
+After cloning this Git repo, please run from the root directory:
+
 ```bash
 pip install -e .
 ```
-at the root of the package.
 
 ## Visualization of results
+
 Results can be visualised using the stand-alone Scope Viewer available on GitHub at:
+
 ```bash
 git clone https://github.com/brsynth/scope-viewer.git
 ```
 
 ## Toxicity calculator
+
 For using the toxicity calculator:
+
 ```bash
 conda install scikit-learn=0.19.1
 ```
 
 ## DB cache
+
 For using a database to cache results, you can find it on GitHub:
+
 ```bash
 conda install pymongo
 git clone https://github.com/brsynth/rp3_dcache.git
 ```
+
 Then run `pip install -e .` at the root of the downloaded package.
 Check detailed instructions in the DB cache repository for instructions
 on how to set up and run the cache database.
@@ -60,13 +67,18 @@ on how to set up and run the cache database.
 while rules in json format with ECFPS (optional) will be in `[data_path]/rules`
 
 Run the following commands:
+
 ```bash
 python calculate_rule_sets_similarity.py --rule_address_with_H your_rule_address --rule_address_without_H your_rule_address
 python calculate_organisms.py
 ```
 
+Notice: predefined sets of reaction rules are available on the [RetroRules website](https://retrorules.org/dl).
+
 # Testing
+
 __Important__: Tests have to be executed in the root folder of the program, which contains the tests folder.
+
 ```bash
 python change_config.py --use_cache True --add_Hs True
 pytest -v
