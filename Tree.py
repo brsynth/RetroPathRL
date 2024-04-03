@@ -6,8 +6,6 @@ Defines the Tree of the MCTS: main object for RetroPath 3
 import os
 import sys
 import time
-import signal
-import datetime
 import logging
 import argparse
 import pickle
@@ -34,8 +32,28 @@ from pathway import Pathway
 from pathway_scoring import RandomPathwayScorer, constant_pathway_scoring, null_pathway_scoring, \
     biological_pathway_scoring, biochemical_pathway_scoring
 from tree_viewer import Tree_viewer
-from organisms import detectable_cmpds_H, ecoli_chassis_H, Test_organism_H, iJO1366_chassis_H
-from organisms import detectable_cmpds_noH, ecoli_chassis_noH, Test_organism_noH, import_organism_from_csv, iJO1366_chassis_noH
+from organisms import (
+
+    # With Hs
+    bsubtilis_H,
+    core_ecoli_H,
+    detectable_cmpds_H,
+    ecoli_chassis_H,
+    iJO1366_chassis_H,
+    Test_organism_H,
+
+    # Without Hs
+    core_ecoli_noH,
+    bsubtilis_noH,
+    detectable_cmpds_noH,
+    ecoli_chassis_noH,
+    iJO1366_chassis_noH,
+    Test_organism_noH,
+
+    # Import function
+    import_organism_from_csv,
+)
+
 # General Configuration
 from config import *
 if use_toxicity:
@@ -1396,12 +1414,18 @@ def __cli():
     logging.info(RAVE_config)
     logging.info("-------------------Chemical configurations -------------------------")
     logging.info(hydrogen_config)
+
     if use_toxicity:
         logging.info("-------------------Toxicity configurations -------------------------")
         logging.info(toxicity_scorer.log_loading)
         logging.info(toxicity_scorer.log_score)
     try:
-        organism = get_organism(biosensor, organism_name = args.organism_name, complementary_sink = args.complementary_sink, add_Hs = add_Hs)
+        organism = get_organism(
+            biosensor,
+            organism_name=args.organism_name,
+            complementary_sink=args.complementary_sink,
+            add_Hs=add_Hs
+        )
         if retrosynthesis and biosensor:
             raise RunModeError(retrosynthesis, biosensor)
         try:
