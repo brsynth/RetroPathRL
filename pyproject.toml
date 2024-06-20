@@ -1,0 +1,6 @@
+[tool.commitizen]
+name = "cz_conventional_commits"
+version = "1.0.1"
+version_provider = "commitizen"
+tag_format = "$version"
+version_type = "semver2"
