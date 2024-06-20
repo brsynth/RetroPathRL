@@ -3,8 +3,9 @@ the aim of this file is to store configuration parameters, notably for the DB.
 It replaces what I previously wanted to define as 'global'
 """
 try:
-    from rp3_cache.Manager import Manager  # In house module
-    from rp3_cache.Utils import make_document_id, as_document, rdmols_from_document
+    from rp3_dcache.Manager import Manager  # In house module
+    from rp3_dcache.Utils import make_document_id, as_document, rdmols_from_document
+
     dcache_installed = True
 except ModuleNotFoundError:
     dcache_installed = False
@@ -22,7 +23,7 @@ hydrogen_config = "Using explicit hydrogens : {}".format(add_Hs)
 # Database for storing results configuration
 global DB_CACHE
 global DB_REPLACE
-DB_CACHE = True and dcache_installed
+DB_CACHE = False and dcache_installed
 DB_REPLACE = False and dcache_installed
 DB_time = 0
 if DB_CACHE:
@@ -47,8 +48,8 @@ else:
 # Mode for using RP3: retrosynthesis or biosensor. QSAR might be implemented one day.
 global retrosynthesis
 global biosensor
-retrosynthesis = False
-biosensor = True
+retrosynthesis = True
+biosensor = False
 tree_mode_config = "Using retrosynthesis: {} - using biosensor {}".format(
     retrosynthesis, biosensor
 )
@@ -58,7 +59,7 @@ global home_made_cache
 home_made_cache = {}
 
 global use_cache
-use_cache = True
+use_cache = False
 
 cache_config = "Initialising an empty cache: {}; Using it: {}".format(
     home_made_cache, use_cache
