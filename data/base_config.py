@@ -12,8 +12,8 @@ import logging
 import os
 
 # Files and addresses configurations - should not be modified:
-global data_path
-data_path = "{}/data".format(os.path.dirname(os.path.abspath(__file__)))
+global DATA_PATH
+DATA_PATH = "{}/data".format(os.path.dirname(os.path.abspath(__file__)))
 
 global add_Hs
 add_Hs = True

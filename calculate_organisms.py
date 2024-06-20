@@ -92,6 +92,7 @@ def __run__():
 
     return 0
 
+
 if __name__ == "__main__":
     d = "Formatting organisms in a RP3 compatible format"
     parser = argparse.ArgumentParser(description=d)

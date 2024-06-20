@@ -605,7 +605,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    folder_to_save = "{}/{}".format(data_path, "rules")
+    folder_to_save = "{}/{}".format(DATA_PATH, "rules")
     if not os.path.exists(folder_to_save):
         os.mkdir(folder_to_save)
 

@@ -49,7 +49,7 @@ class ToxicityScoring(CompoundScoring):
     The data is stored in a csv file, tab delimited, with columns "name", 'InChI' and "toxicity"
     This can easily be changed to another data with a similar formatting.
     """
-    def __init__(self, toxicity_data = "{}/name_structure_toxicity.csv".format(data_path)):
+    def __init__(self, toxicity_data = "{}/name_structure_toxicity.csv".format(DATA_PATH)):
         CompoundScoring.__init__(self)
         self.scoring_function = self.scoring_function()
         self.name = "ToxicityScoring"

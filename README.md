@@ -61,10 +61,10 @@ on how to set up and run the cache database.
 
 # Set-up data files
 
-- You need to specify in the config.py file where you want to store the data (`data_path`).
+- You need to specify in the config.py file where you want to store the data (`DATA_PATH`).
 - Unless specified, it will be stored in the package folder/data
-- Organisms will be stored in `[data_path]/organisms` (`data_path` should not end with a /)
-while rules in json format with ECFPS (optional) will be in `[data_path]/rules`
+- Organisms will be stored in `[DATA_PATH]/organisms` (`DATA_PATH` should not end with a /)
+while rules in json format with ECFPS (optional) will be in `[DATA_PATH]/rules`
 
 Run the following commands:
 

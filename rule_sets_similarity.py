@@ -85,7 +85,7 @@ with open(rule_mixed_subset_address, "r") as csv_file:
         applicable_rules_mixed_dict_sim[element["Rule_ID"]]["products_ECFP"] = [applicable_rules_mixed_dict_sim[element["Rule_ID"]]["products_ECFP"]]
 
 
-folder_for_data = "{}/{}".format(data_path, "rules")
+folder_for_data = "{}/{}".format(DATA_PATH, "rules")
 
 with open("{}/{}.pkl".format(folder_for_data, "full_rules_forward_H"), "rb") as pickle_handler:
     full_rules_forward_H = pickle.load(pickle_handler)

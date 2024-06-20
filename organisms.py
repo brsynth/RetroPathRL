@@ -53,7 +53,7 @@ def import_organism_from_csv(csv_file, add_Hs = True):
     return(organism)
 
 
-organisms_data_path = "{}/organisms".format(data_path)
+organisms_data_path = "{}/organisms".format(DATA_PATH)
 if not os.path.exists(organisms_data_path):
     os.mkdir(organisms_data_path)
 
