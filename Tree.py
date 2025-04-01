@@ -1233,23 +1233,29 @@ def __cli():
 
     if args.verbose:
         logging_level = logging.DEBUG
+        log_format = "%(asctime)s - %(pathname)s (%(lineno)d) > %(funcName)s - %(levelname)s - %(message)s"
     else:
         logging_level = logging.INFO
+        log_format = "%(asctime)s -- %(levelname)s -- %(message)s"
     if args.log_file is None:
-        logging.basicConfig(stream=sys.stderr,
-                            level=logging_level,
-                            datefmt='%d/%m/%Y %H:%M:%S',
-                            format='%(asctime)s -- %(levelname)s -- %(message)s')
+        logging.basicConfig(
+            stream=sys.stderr,
+            level=logging_level,
+            datefmt='%d/%m/%Y %H:%M:%S',
+            format=log_format,
+        )
     else:
         if not "log" in args.log_file:
             log_file = "log_" + args.log_file
         else:
             log_file = args.log_file
         log_writer = open("{}/{}".format(folder_to_save, log_file), "w")
-        logging.basicConfig(stream=log_writer,
-                            level=logging_level,
-                            datefmt='%d/%m/%Y %H:%M:%S',
-                            format='%(asctime)s -- %(levelname)s -- %(message)s')
+        logging.basicConfig(
+            stream=log_writer,
+            level=logging_level,
+            datefmt='%d/%m/%Y %H:%M:%S',
+            format=log_format,
+        )
     if not args.seed is None:
         random.seed(args.seed)
         logging.warning("Setting the seed at {}".format(args.seed))
