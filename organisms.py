@@ -17,7 +17,7 @@ from compound import Compound, unpickle
 from chemical_compounds_state import ChemicalCompoundState
 from rdkit.Chem import AllChem
 from utilities.reactor.Utils import standardize_chemical, standardize_results, handle_results, ChemConversionError
-from utilities.reactor.cli import worker_match, worker_fire, kill, RuleConversionError
+from utilities.reactor.cli import worker_match, worker_fire, RuleConversionError
 
 
 class NotReady(Exception):
