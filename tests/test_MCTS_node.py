@@ -87,13 +87,12 @@ class TestMCTSNode(object):
         assert state_apply_move == known_result_state
 
     def test_proper_child_addition_821_rule_117465_moves(self):
-        # random.seed(42)
+        random.seed(42)
         csmile = "[H][C](=[O])[C]([H])([H])[C]([H])([H])[H]"
-        csmile_2 = "[H][O][C]([H])([H])[C]([H])([O][H])[C]([H])([H])[H]"
         compound = Compound(csmile, "821")
-        compound_1 = Compound("[H+]", name = "1")
-        compound_6 = Compound("[H][N]=[C]([O][H])[C]1=[C]([H])[N]([C]2([H])[O][C]([H])([C]([H])([H])[O][P](=[O])([O][H])[O][P](=[O])([O][H])[O][C]([H])([H])[C]3([H])[O][C]([H])([n]4[c]([H])[n][c]5[c]([N]([H])[H])[n][c]([H])[n][c]54)[C]([H])([O][P](=[O])([O][H])[O][H])[C]3([H])[O][H])[C]([H])([O][H])[C]2([H])[O][H])[C]([H])=[C]([H])[C]1([H])[H]", name = '6')
-        compound_2345 = Compound("[H][C](=[O])[C]([H])=[C]([H])[H]", name = "2345")
+        compound_1 = Compound("[H+]")
+        compound_6 = Compound("[H][N]=[C]([O][H])[C]1=[C]([H])[N]([C]2([H])[O][C]([H])([C]([H])([H])[O][P](=[O])([O][H])[O][P](=[O])([O][H])[O][C]([H])([H])[C]3([H])[O][C]([H])([n]4[c]([H])[n][c]5[c]([N]([H])[H])[n][c]([H])[n][c]54)[C]([H])([O][P](=[O])([O][H])[O][H])[C]3([H])[O][H])[C]([H])([O][H])[C]2([H])[O][H])[C]([H])=[C]([H])[C]1([H])[H]")
+        compound_2345 = Compound("[H][C](=[O])[C]([H])=[C]([H])[H]")
         known_result_state = ChemicalCompoundState([compound_1, compound_6, compound_2345], organism = Test_organism_H)
         state_apply_move = ChemicalCompoundState(compound, organism = Test_organism_H)
         moves = state_apply_move.GetMoves(top_x = 2)
@@ -109,9 +108,9 @@ class TestMCTSNode(object):
         csmile_821 = "[H][C](=[O])[C]([H])([H])[C]([H])([H])[H]"
         csmile_90191 = "[H][O][C]([H])([H])[C]([H])([O][H])[C]([H])([H])[H]"
         compound = Compound(csmile_821, "821")
-        compound_1 = Compound("[H+]", name = "1")
-        compound_6 = Compound("[H][N]=[C]([O][H])[C]1=[C]([H])[N]([C]2([H])[O][C]([H])([C]([H])([H])[O][P](=[O])([O][H])[O][P](=[O])([O][H])[O][C]([H])([H])[C]3([H])[O][C]([H])([n]4[c]([H])[n][c]5[c]([N]([H])[H])[n][c]([H])[n][c]54)[C]([H])([O][P](=[O])([O][H])[O][H])[C]3([H])[O][H])[C]([H])([O][H])[C]2([H])[O][H])[C]([H])=[C]([H])[C]1([H])[H]", name = '6')
-        compound_2345 = Compound("[H][C](=[O])[C]([H])=[C]([H])[H]", name = "2345")
+        compound_1 = Compound("[H+]")
+        compound_6 = Compound("[H][N]=[C]([O][H])[C]1=[C]([H])[N]([C]2([H])[O][C]([H])([C]([H])([H])[O][P](=[O])([O][H])[O][P](=[O])([O][H])[O][C]([H])([H])[C]3([H])[O][C]([H])([n]4[c]([H])[n][c]5[c]([N]([H])[H])[n][c]([H])[n][c]54)[C]([H])([O][P](=[O])([O][H])[O][H])[C]3([H])[O][H])[C]([H])([O][H])[C]2([H])[O][H])[C]([H])=[C]([H])[C]1([H])[H]")
+        compound_2345 = Compound("[H][C](=[O])[C]([H])=[C]([H])[H]")
         compound_90191 = Compound(csmile_90191, "90191")
         resulting_state_94682 = ChemicalCompoundState([compound_90191], organism = Test_organism_H)
         resulting_state_117465 = ChemicalCompoundState([compound_1, compound_6, compound_2345], organism = Test_organism_H)
@@ -129,11 +128,10 @@ class TestMCTSNode(object):
 
     def test_expand_90191(self):
         csmile_90191 = "[H][O][C]([H])([H])[C]([H])([O][H])[C]([H])([H])[H]"
-        compound_1 = Compound("[H+]", name = "1")
-        compound_6 = Compound("[H][N]=[C]([O][H])[C]1=[C]([H])[N]([C]2([H])[O][C]([H])([C]([H])([H])[O][P](=[O])([O][H])[O][P](=[O])([O][H])[O][C]([H])([H])[C]3([H])[O][C]([H])([n]4[c]([H])[n][c]5[c]([N]([H])[H])[n][c]([H])[n][c]54)[C]([H])([O][P](=[O])([O][H])[O][H])[C]3([H])[O][H])[C]([H])([O][H])[C]2([H])[O][H])[C]([H])=[C]([H])[C]1([H])[H]", name = '6')
-        compound_10 = Compound("[H][N]=[C]([O][H])[C]1=[C]([H])[N]([C]2([H])[O][C]([H])([C]([H])([H])[O][P](=[O])([O][H])[O][P](=[O])([O][H])[O][C]([H])([H])[C]3([H])[O][C]([H])([n]4[c]([H])[n][c]5[c]([N]([H])[H])[n][c]([H])[n][c]54)[C]([H])([O][H])[C]3([H])[O][H])[C]([H])([O][H])[C]2([H])[O][H])[C]([H])=[C]([H])[C]1([H])[H]", name = "10")
-        compound_909 = Compound("[H][O][C]([H])([C]([H])=[O])[C]([H])([H])[H]", name = 909)
-        # compound_2345 = Compound("[H][C](=[O])[C]([H])=[C]([H])[H]", name = "2345")
+        compound_1 = Compound("[H+]")
+        compound_6 = Compound("[H][N]=[C]([O][H])[C]1=[C]([H])[N]([C]2([H])[O][C]([H])([C]([H])([H])[O][P](=[O])([O][H])[O][P](=[O])([O][H])[O][C]([H])([H])[C]3([H])[O][C]([H])([n]4[c]([H])[n][c]5[c]([N]([H])[H])[n][c]([H])[n][c]54)[C]([H])([O][P](=[O])([O][H])[O][H])[C]3([H])[O][H])[C]([H])([O][H])[C]2([H])[O][H])[C]([H])=[C]([H])[C]1([H])[H]")
+        compound_10 = Compound("[H][N]=[C]([O][H])[C]1=[C]([H])[N]([C]2([H])[O][C]([H])([C]([H])([H])[O][P](=[O])([O][H])[O][P](=[O])([O][H])[O][C]([H])([H])[C]3([H])[O][C]([H])([n]4[c]([H])[n][c]5[c]([N]([H])[H])[n][c]([H])[n][c]54)[C]([H])([O][H])[C]3([H])[O][H])[C]([H])([O][H])[C]2([H])[O][H])[C]([H])=[C]([H])[C]1([H])[H]")
+        compound_909 = Compound("[H][O][C]([H])([C]([H])=[O])[C]([H])([H])[H]")
         compound_90191 = Compound(csmile_90191)
         resulting_state_95713 = ChemicalCompoundState([compound_1, compound_10, compound_909], organism = Test_organism_H)
         resulting_state_903108 = ChemicalCompoundState([compound_1, compound_6, compound_909], organism = Test_organism_H)

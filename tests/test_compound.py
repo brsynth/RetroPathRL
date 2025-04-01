@@ -10,7 +10,7 @@ from rdkit import Chem, RDLogger
 from rdkit.Chem import AllChem
 # from reactor.Core import RuleBurnerCore
 from utilities.reactor.Utils import standardize_chemical, standardize_results, handle_results, ChemConversionError
-from utilities.reactor.cli import worker_match, worker_fire, kill
+from utilities.reactor.cli import worker_match, worker_fire
 
 # Class to test
 from compound import Compound, unpickle
@@ -158,22 +158,36 @@ class TestCompound(object):
 
     def test_apply_transformation_sets(self):
 
-        set_1 = [Compound('[H]OC([H])([H])C([H])(O[H])C([H])([H])[H]').name]
-        set_2 = [Compound('[H]C(=O)C([H])=C([H])[H]').name, Compound('[H+]').name, Compound('[H]N=C(O[H])C1=C([H])N(C2([H])OC([H])(C([H])([H])OP(=O)(O[H])OP(=O)(O[H])OC([H])([H])C3([H])OC([H])(n4c([H])nc5c(N([H])[H])nc([H])nc54)C([H])(OP(=O)(O[H])O[H])C3([H])O[H])C([H])(O[H])C2([H])O[H])C([H])=C([H])C1([H])[H]').name]
+        set_1 = [
+            Compound('[H]OC([H])([H])C([H])(O[H])C([H])([H])[H]')
+        ]
+        print("set_1:")
+        for product in set_1:
+            print(f"product: {product.name} - {product.csmiles}")
+
+        set_2 = [
+            Compound('[H]C(=O)C([H])=C([H])[H]'),
+            Compound('[H+]'),
+            Compound('[H]N=C(O[H])C1=C([H])N(C2([H])OC([H])(C([H])([H])OP(=O)(O[H])OP(=O)(O[H])OC([H])([H])C3([H])OC([H])(n4c([H])nc5c(N([H])[H])nc([H])nc54)C([H])(OP(=O)(O[H])O[H])C3([H])O[H])C([H])(O[H])C2([H])O[H])C([H])=C([H])C1([H])[H]'),
+        ]
+        print("set_2:")
+        for product in set_2:
+            print(f"product: {product.name} - {product.csmiles}")
+
         set_test_compound = "[H][C](=[O])[C]([H])([H])[C]([H])([H])[H]"
         compound = Compound(set_test_compound)
         moves = compound.obtain_applicable_transformation_with_move(available_rules = applicable_rules_10_dict)
         found_set_1 = False
         found_set_2 = False
-        all_found = True
-        for move in moves:
+        for idx, move in enumerate(moves):
+            print(f"move: {idx} - {move.rid} - {move.rsmart}")
             products = compound.apply_transformation_with_move(move)
-            if set([product.name for product in products]) == set(set_1):
+            for product in products:
+                print(f"product: {product.name} - {product.csmiles}")
+            if set([product.name for product in products]) == set([product.name for product in set_1]):
                 found_set_1 = True
-            elif set([product.name for product in products]) == set(set_2):
+            elif set([product.name for product in products]) == set([product.name for product in set_2]):
                 found_set_2 = True
-            else:
-                all_found = False
 
         assert (found_set_1 and found_set_2 and len(moves) == 2)
 
