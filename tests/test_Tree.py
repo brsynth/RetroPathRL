@@ -98,7 +98,7 @@ class TestTree(object):
         same_states = test_Tree.equality_visited_states(test_Tree_bis)
         assert different_trees and same_states
 
-    def test_pickling_unpickling(self):
+    def test_pickling_unpickling(self, tmpdir):
         csmile = "[H][C](=[O])[C]([H])([H])[C]([H])([H])[H]"
         compound = Compound(csmile, name = "821")
         state = ChemicalCompoundState([compound], organism = Test_organism_H, representation = Test_representation)  # state is not sanitised
@@ -108,11 +108,11 @@ class TestTree(object):
                          Rollout_policy = "Rollout_policy_first",
                          UCT_policy = "Biochemical_UCT_1")
         test_Tree.run_search()
-        test_Tree.save("test", folder_address = "tests/generated_jsons/pickles")
-        loaded_tree = unpickle(file_name = 'test', type = 'tree', folder_address = "tests/generated_jsons/pickles")
+        test_Tree.save("test", folder_address = tmpdir)
+        loaded_tree = unpickle(file_name = 'test', type = 'tree', folder_address = tmpdir)
         assert test_Tree == loaded_tree
 
-    def test_pickling_unpickling_differ(self):
+    def test_pickling_unpickling_differ(self, tmpdir):
         csmile = "[H][C](=[O])[C]([H])([H])[C]([H])([H])[H]"
         compound = Compound(csmile, name = "821")
         state = ChemicalCompoundState([compound], organism = Test_organism_H, representation = Test_representation)  # state is not sanitised
@@ -122,9 +122,9 @@ class TestTree(object):
                          Rollout_policy = "Rollout_policy_first",
                          UCT_policy = "Biochemical_UCT_1")
         test_Tree.run_search()
-        test_Tree.save("test", folder_address = "tests/generated_jsons/pickles")
+        test_Tree.save("test", folder_address = tmpdir)
         test_Tree.run_search()
-        loaded_tree = unpickle(file_name = 'test', type = 'tree', folder_address = "tests/generated_jsons/pickles")
+        loaded_tree = unpickle(file_name = 'test', type = 'tree', folder_address = tmpdir)
         assert test_Tree != loaded_tree
 
     def test_biosensor(self):

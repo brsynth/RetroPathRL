@@ -35,11 +35,11 @@ class TestCompound(object):
         compound = Compound(csmile)
         assert csmile == Chem.MolToSmiles(compound.rdmol,isomericSmiles=True, allHsExplicit=True)
 
-    def test_simple_pickle(self):
+    def test_simple_pickle(self, tmpdir):
         csmile = "[H][C](=[O])[C]([H])([H])[C]([H])([H])[H]"
         compound = Compound(csmile)
-        compound.save("test", folder_address = "tests/generated_jsons/pickles")
-        loaded = unpickle("test", folder_address = "tests/generated_jsons/pickles")
+        compound.save("test", folder_address = tmpdir)
+        loaded = unpickle("test", folder_address = tmpdir)
         assert compound.eq_full_inchi_key(loaded)
 
     def test_standardisation(self):
@@ -55,11 +55,11 @@ class TestCompound(object):
         s_compound = Compound(csmile)
         assert ns_compound.csmiles == s_compound.csmiles
 
-    def test_unstandardised_pickle(self):
+    def test_unstandardised_pickle(self, tmpdir):
         csmile = "C(=O)CC"
         compound = Compound(csmile)
-        compound.save("test", folder_address = "tests/generated_jsons/pickles")
-        loaded = unpickle("test", folder_address = "tests/generated_jsons/pickles")
+        compound.save("test", folder_address = tmpdir)
+        loaded = unpickle("test", folder_address = tmpdir)
         assert compound.eq_full_inchi_key(loaded)
 
     def test_InChI_keys(self):

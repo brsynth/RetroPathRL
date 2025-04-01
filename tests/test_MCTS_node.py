@@ -173,14 +173,16 @@ class TestMCTSNode(object):
         node_2 = MCTS_node(state_2)
         assert (node_1 == node_2)
 
-    def test_pickling_and_saving(self):
+    def test_pickling_and_saving(self, tmpdir):
         compound_6 = Compound("[H][N]=[C]([O][H])[C]1=[C]([H])[N]([C]2([H])[O][C]([H])([C]([H])([H])[O][P](=[O])([O][H])[O][P](=[O])([O][H])[O][C]([H])([H])[C]3([H])[O][C]([H])([n]4[c]([H])[n][c]5[c]([N]([H])[H])[n][c]([H])[n][c]54)[C]([H])([O][P](=[O])([O][H])[O][H])[C]3([H])[O][H])[C]([H])([O][H])[C]2([H])[O][H])[C]([H])=[C]([H])[C]1([H])[H]", name = '6')
         compound_10 = Compound("[H][N]=[C]([O][H])[C]1=[C]([H])[N]([C]2([H])[O][C]([H])([C]([H])([H])[O][P](=[O])([O][H])[O][P](=[O])([O][H])[O][C]([H])([H])[C]3([H])[O][C]([H])([n]4[c]([H])[n][c]5[c]([N]([H])[H])[n][c]([H])[n][c]54)[C]([H])([O][H])[C]3([H])[O][H])[C]([H])([O][H])[C]2([H])[O][H])[C]([H])=[C]([H])[C]1([H])[H]", name = "10")
         compound_909 = Compound("[H][O][C]([H])([C]([H])=[O])[C]([H])([H])[H]", name = 909)
         state_1 = ChemicalCompoundState([compound_6, compound_10, compound_909], organism = Test_organism_H)
         node_1 = MCTS_node(state_1)
-        node_1.save(folder_address = "tests/generated_jsons/pickles")
-        node_2 = unpickle("6_10_909-0-0", type = "node", folder_address = "tests/generated_jsons/pickles")
+        # node_1.save(folder_address = "tests/generated_jsons/pickles")
+        node_1.save(folder_address = tmpdir)
+        # node_2 = unpickle("6_10_909-0-0", type = "node", folder_address = "tests/generated_jsons/pickles")
+        node_2 = unpickle("6_10_909-0-0", type = "node", folder_address = tmpdir)
         assert (node_1 == node_2)
 
     def test_node_unexpanded(self):
