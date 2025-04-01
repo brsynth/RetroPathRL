@@ -81,7 +81,7 @@ __Important__: Tests have to be executed in the root folder of the program, whic
 
 ```bash
 python change_config.py --use_cache True --add_Hs True
-pytest -v
+python -m pytest -v
 ```
 
 # Command line examples
