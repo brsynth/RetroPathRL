@@ -20,7 +20,7 @@ __Compatibility notice__: RetroPathRL has been developped and tested using Linux
 ```bash
 conda create --name mcts python=3.9
 conda activate mcts
-conda install --channel conda-forge rdkit=2021
+conda install --channel conda-forge rdkit=2021.03
 conda install pytest pyyaml
 ```
 
