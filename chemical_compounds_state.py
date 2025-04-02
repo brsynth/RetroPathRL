@@ -12,7 +12,7 @@ import sys
 import pickle
 import bisect  # Faster insertion in ordered lists
 
-# Object classes for RP3
+# Object classes for RP3
 from compound import Compound, unpickle  # Base chemical compound object
 from representation import Test_representation, Test_to_file  # How to represent the results (ie: colors or not)
 from rewarding import Basic_Rollout_Reward  # How rollout runs/ chassis compounds are rewarded
@@ -67,17 +67,19 @@ class ChemicalCompoundState(object):
 
     logger = logging.getLogger(__name__)
 
-    def __init__(self,
-                 compound_list,
-                 name_list = None,
-                 organism = None,
-                 representation = Test_representation,
-                 state_name = None,
-                 available_rules = None,
-                 main_layer = True,
-                 automatic_sanitation = True,
-                 chemical_scorer = "RandomChemicalScorer",
-                 biological_scorer = "RandomBiologicalScorer"):
+    def __init__(
+        self,
+        compound_list,
+        name_list=None,
+        organism=None,
+        representation=Test_representation,
+        state_name=None,
+        available_rules=None,
+        main_layer=True,
+        automatic_sanitation=True,
+        chemical_scorer="RandomChemicalScorer",
+        biological_scorer="RandomBiologicalScorer",
+    ):
 
         self.main_layer = main_layer
         self._helper_init(compound_list, name_list) # Treats various ways to Initialize the state
@@ -156,17 +158,17 @@ class ChemicalCompoundState(object):
         self.logger.debug("self.sanitised {}".format(self.sanitised))
         self.logger.debug("other.sanitised {}".format(other.sanitised))
         if not equal:
-            return(equal)
+            return equal
         # If length are different, states are different
         # equal = equal and (len(self.compound_list) == len(other.compound_list))
         equal = len(self.compound_list) == len(other.compound_list)
         if not equal:
             self.logger.info("State lengths are not equal. Self's main layer is {} and other is {}".format(self.main_layer, other.main_layer))
-            return(equal)
+            return equal
         # If all compounds of set one are in the other and length are equal, then they are equal
         for compound in self.compound_list:
-            equal = equal and (compound.in_list(list_of_compounds = other.compound_list, main_layer = self.main_layer))
-        return(equal)
+            equal = equal and (compound.in_list(list_of_compounds=other.compound_list, main_layer=self.main_layer))
+        return equal
 
     def set_available_rules(self, available_rules):
         self.available_rules = available_rules
@@ -188,7 +190,7 @@ class ChemicalCompoundState(object):
             self._sanitise()
 
     def set_organism(self, organism):
-         self.organism = organism
+        self.organism = organism
 
     def save(self, file_name = None, folder_address = "pickled_data"):
         if file_name is None:
@@ -257,7 +259,7 @@ class ChemicalCompoundState(object):
                 if compound_to_remove.eq_full_inchi_key(self.compound_list[compound_index]):
                     compound_inside_set = self.compound_list[compound_index]
                     break
-        if not compound_inside_set is None:
+        if compound_inside_set is not None:
             del self.compound_list[compound_index]  # delete the compound from the set
 
     def _naming(self):
@@ -281,23 +283,25 @@ class ChemicalCompoundState(object):
             chassis_state = organism
             for compound in self.compound_list:
                 if chassis_state.compound_in_state(compound):
-                    rep = rep + self.representation.color_begin + str(compound) + self.representation.printing_solved +  self.representation.color_end + delimiter
+                    rep = rep + self.representation.color_begin + str(compound) + self.representation.printing_solved + self.representation.color_end + delimiter
                 else:
                     rep = rep + str(compound) + delimiter
-        return(rep)
+        return rep
 
     def clone(self):
         """
         Cloning the state is key for rollout.
         It allows for changing the sate without creating new nodes
         """
-        return(ChemicalCompoundState(self.compound_list,
-                                     organism = self.organism,
-                                     representation = self.representation,
-                                     available_rules = self.available_rules,
-                                     main_layer = self.main_layer,
-                                     biological_scorer = self.biological_scorer,
-                                     chemical_scorer = self.chemical_scorer))
+        return ChemicalCompoundState(
+            self.compound_list,
+            organism=self.organism,
+            representation=self.representation,
+            available_rules=self.available_rules,
+            main_layer=self.main_layer,
+            biological_scorer=self.biological_scorer,
+            chemical_scorer=self.chemical_scorer,
+        )
 
     def _check_sanitized_state(self):
         """
@@ -361,7 +365,7 @@ class ChemicalCompoundState(object):
                 self.compound_list = sorted(self.compound_list)
         self.logger.info("Added {} compounds when merging states".format(added))
 
-    def ApplyMove(self, move, return_compounds = False):
+    def ApplyMove(self, move, return_compounds=False):
         """
         Move should allow application with only the compound number and rule_ID.
         Then it can be applied through querrying and chemistry equally
@@ -377,7 +381,7 @@ class ChemicalCompoundState(object):
                 if self.compound_list[compound_index].InChIKey == move.compound_id:
                     compound_to_change = self.compound_list[compound_index]
                     break
-        product_set = compound_to_change.apply_transformation_with_move(move = move)
+        product_set = compound_to_change.apply_transformation_with_move(move=move)
         if return_compounds:
             products = []
         del self.compound_list[compound_index]  # delete the compound from the set
@@ -389,9 +393,9 @@ class ChemicalCompoundState(object):
             if return_compounds:
                 products.append(compound_to_add)
         if return_compounds:
-            return(products)
+            return products
 
-    def GetMoves(self, top_x = 5, chemical_score = True, biological_score = True, extension = False):
+    def GetMoves(self, top_x=5, chemical_score=True, biological_score=True, extension=False):
         """
         GetMoves should only return compound_index and rule_ID, as these will be used for DB query.
         It returns the ordered moves with their scores

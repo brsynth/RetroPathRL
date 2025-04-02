@@ -318,8 +318,10 @@ class Tree:
         raise_stop = False
         start_tree_search_time = time.time()
         try:
-            for i in range(self.root_node.visits - self.root_node.virtual_visits,
-                           self.itermax + self.root_node.visits - self.root_node.virtual_visits):
+            for i in range(
+                self.root_node.visits - self.root_node.virtual_visits,
+                self.itermax + self.root_node.visits - self.root_node.virtual_visits,
+            ):
                 # exploration and EXPANSION
                 if time.time() - start_tree_search_time > self.time_budget:
                     raise myTimeoutException(iteration=i)
@@ -327,11 +329,19 @@ class Tree:
                 if i % int(round(self.itermax / 10)) == 0:
                     self.logger.info("Performing iteration {} out of {}".format(i, self.itermax))
                     if self.heavy_saving:
-                        # Saving Tree for further analysis during teh search.
+                        # Saving Tree for further analysis during the search.
                         self.find_full_tree(iteration=i)
-                        self.save(file_name="{}_iteration_{}".format(self.root_state.compound_list[0], i),
-                                  folder_address=self.folder_to_save_pickles)
-                        self.jsonify_full_tree(file_name="{}_iteration_{}".format(self.root_state.compound_list[0], i))
+                        self.save(
+                            file_name="{}_iteration_{}".format(
+                                self.root_state.compound_list[0], i
+                            ),
+                            folder_address=self.folder_to_save_pickles,
+                        )
+                        self.jsonify_full_tree(
+                            file_name="{}_iteration_{}".format(
+                                self.root_state.compound_list[0], i
+                            )
+                        )
                 # A new iteration starts from the root node.
                 node = self.root_node
                 start_selection_time = time.time()
@@ -349,7 +359,7 @@ class Tree:
                         node = node.UCTSelectChild(UCT_policy=UCT_policy)
                         state = node.state
                     elif self.progressive_widening:
-                        if node.moves == []: # No moves are available for PW.
+                        if node.moves == []:  # No moves are available for PW.
                             node = node.UCTSelectChild(UCT_policy=UCT_policy)
                             state = node.state
                         else:  # there are still available moves, apply PW condition
@@ -362,7 +372,6 @@ class Tree:
                         break
                 selection_time = selection_time + time.time() - start_selection_time
                 start_expansion_time = time.time()
-
                 if node.moves != [] and not node.terminal:  # This node can be expanded.
                     move = node.moves[0]
                     looping_move = False
@@ -964,7 +973,6 @@ class Tree:
         while nodes_to_treat != []:
             node = nodes_to_treat[0]
             del nodes_to_treat[0]
-            #  print(node.terminal)
             if node.move is not None:
                 full_scope.add_reaction(node.move, depth=node.level)
             if node.terminal:
@@ -1507,7 +1515,7 @@ def __cli():
             biosensor,
             organism_name=args.organism_name,
             complementary_sink=args.complementary_sink,
-            add_Hs=add_Hs
+            add_Hs=add_Hs,
         )
         if retrosynthesis and biosensor:
             raise RunModeError(retrosynthesis, biosensor)
@@ -1573,14 +1581,15 @@ def __cli():
                 # Check compound compatibility
                 current_root_state = search_tree.root_state
                 try:
-                    root_compound = Compound(csmiles=args.c_smiles,
-                                             InChI=args.c_inchi,
-                                             name=args.c_name,
-                                             max_moves=args.expansion_width,
-                                             stereo=False,
-                                             heavy_standardisation=True)
-                    state = ChemicalCompoundState([root_compound],
-                                                  representation=representation)  # state is not sanitised
+                    root_compound = Compound(
+                        csmiles=args.c_smiles,
+                        InChI=args.c_inchi,
+                        name=args.c_name,
+                        max_moves=args.expansion_width,
+                        stereo=False,
+                        heavy_standardisation=True,
+                    )
+                    state = ChemicalCompoundState([root_compound], representation=representation)  # state is not sanitised
                     if state != current_root_state:
                         raise IncorrectTreeLoading(
                             "New root {} is different from old root {} when loading tree".format(

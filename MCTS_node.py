@@ -9,7 +9,7 @@ import logging
 import sys
 import pickle
 
-# RP3 specific classes
+# RP3 specific classes
 from compound import Compound, unpickle
 from move import Move
 from chemical_compounds_state import ChemicalCompoundState
@@ -79,7 +79,7 @@ class MCTS_node(object):
 
         self.flag_for_extension = False
 
-        # Check children from transposition table, not from here
+        # Check children from transposition table, not from here
         if use_transpositions:
             """
             Under development, should not be used.
@@ -159,7 +159,6 @@ class MCTS_node(object):
         print("Allowed moves here {}".format(self.moves))
         print("Is terminal (y/n) {}".format(self.terminal))
         print("Has a solved cild (y/n): {}".format(self.has_a_solved_child))
-
 
     def _helper_history(self, history):
         """
@@ -324,7 +323,7 @@ class MCTS_node(object):
         else:
             raise NotImplementedError
 
-    def AddChild(self, move, state, remove = True):
+    def AddChild(self, move, state, remove=True):
         """
         Add a new child node for this move.
         If using transposition table, add it to the reference parent.
@@ -362,23 +361,25 @@ class MCTS_node(object):
                       minimal_visit_counts = self.minimal_visit_counts,
                       use_rave = self.use_RAVE)
         else:
-            n = MCTS_node(move = move,
-                      parent = self,
-                      state = state.clone(),
-                      level = self.level + 1,
-                      rewarding = self.rewarding,
-                      expansion_width = self.expansion_width,
-                      maximum_depth = self.maximum_depth,
-                      main_layer_tree = self.main_layer_tree,
-                      main_layer_chassis = self.main_layer_chassis,
-                      history = self.history,
-                      chemical_scorer = self.chemical_scorer,
-                      biological_scorer = self.biological_scorer,
-                      chemical_score = self.chemical_score,
-                      virtual_visits = self.virtual_visits,
-                      progressive_bias_strategy = self.progressive_bias_strategy,
-                      minimal_visit_counts = self.minimal_visit_counts,
-                      use_RAVE = self.use_RAVE)
+            n = MCTS_node(
+                move=move,
+                parent=self,
+                state=state.clone(),
+                level=self.level + 1,
+                rewarding=self.rewarding,
+                expansion_width=self.expansion_width,
+                maximum_depth=self.maximum_depth,
+                main_layer_tree=self.main_layer_tree,
+                main_layer_chassis=self.main_layer_chassis,
+                history=self.history,
+                chemical_scorer=self.chemical_scorer,
+                biological_scorer=self.biological_scorer,
+                chemical_score=self.chemical_score,
+                virtual_visits=self.virtual_visits,
+                progressive_bias_strategy=self.progressive_bias_strategy,
+                minimal_visit_counts=self.minimal_visit_counts,
+                use_RAVE=self.use_RAVE,
+            )
         if use_transpositions:
             for node in transposition_table[self.hash]:
                 node.children.append(n)
@@ -457,7 +458,7 @@ class MCTS_node(object):
         - has_a_solved_child
         """
         if use_transpositions:
-            # Visits are independent as else could cause huge bias.
+            # Visits are independent as else could cause huge bias.
             for node in transposition_table[self.hash]:
                 node.visits = node.visits + visit_number  # This could change if there is too mcuh bias
                 node.total_score = node.total_score + result * visit_number
@@ -512,7 +513,7 @@ class MCTS_node(object):
             if not move.in_list(self.expanded_moves_ids, self.main_layer_tree):
                 self.moves.append(move)
         # self.logger.info("Extended node {} by {} moves".format(self.state, len(self.moves)))
-        # Change terminal status
+        # Change terminal status
         no_available_moves = (self.moves == [])
         fully_chassis = (self.current_reward == self.rewarding.full_state_reward)
         if self.terminal:  # Only recalculate terminality for nodes that were considered terminal before

@@ -1247,8 +1247,7 @@ class Compound(object):
         if move is None:
             self.logger.error("No move is specified")
             return []
-        else:
-            return move.product_list
+        return move.product_list
 
     def _get_ECFP(self):
         """

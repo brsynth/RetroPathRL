@@ -111,17 +111,18 @@ class Pathway(object):
 
     def clone(self):
         """ Cloning """
-        duplicated_pathway = Pathway(first_iteration = self.first_iteration,
-                                     organism = self.organism ,
-                                     main_layer = self.main_layer,
-                                     target = self.target,
-                                     compounds = [cmp.clone() for cmp in self.compounds],
-                                     moves = [mv.clone() for mv in self.moves],
-                                     edges = copy.deepcopy(self.edges),
-                                     nodes_compounds = copy.deepcopy(self.nodes_compounds),
-                                     nodes_transformations = copy.deepcopy(self.nodes_transformations)
-                                     )
-        return(duplicated_pathway)
+        duplicated_pathway = Pathway(
+            first_iteration=self.first_iteration,
+            organism=self.organism,
+            main_layer=self.main_layer,
+            target=self.target,
+            compounds=[cmp.clone() for cmp in self.compounds],
+            moves=[mv.clone() for mv in self.moves],
+            edges=copy.deepcopy(self.edges),
+            nodes_compounds=copy.deepcopy(self.nodes_compounds),
+            nodes_transformations=copy.deepcopy(self.nodes_transformations),
+        )
+        return duplicated_pathway
 
     def save(self, file_name = None, folder_address = "pickled_data"):
         if file_name is None:

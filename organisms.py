@@ -29,21 +29,29 @@ class NotReady(Exception):
     def __str__(self):
         return self._msg
 
-def import_organism_from_csv(csv_file, add_Hs = True):
+
+def import_organism_from_csv(csv_file, add_Hs=True):
     with open(csv_file) as csv_handle:
-        dict_reader = csv.DictReader(csv_handle, delimiter = ',')
+        dict_reader = csv.DictReader(csv_handle, delimiter=",")
         compound_list = []
         for row in dict_reader:
             name = row["name"]
             inchi = row["inchi"]
-            if inchi is None or inchi == "None" or inchi =="":
+            if inchi is None or inchi == "None" or inchi == "":
                 pass
             else:
                 try:
                     if name.startswith("InChI"):
-                        compound = Compound(InChI = inchi, heavy_standardisation = True, force_add_H = add_Hs)
+                        compound = Compound(
+                            InChI=inchi, heavy_standardisation=True, force_add_H=add_Hs
+                        )
                     else:
-                        compound = Compound(InChI = inchi, name = name, heavy_standardisation = True, force_add_H = add_Hs)
+                        compound = Compound(
+                            InChI=inchi,
+                            name=name,
+                            heavy_standardisation=True,
+                            force_add_H=add_Hs,
+                        )
                     if not compound.in_list(compound_list, main_layer = False):
                         compound_list.append(compound)
                 except ChemConversionError as e:
