@@ -929,7 +929,7 @@ class Compound(object):
             self.logger.info("Calculated moves in {} for compound {} - without caching".format(time.time()- start_time, self.InChIKey))
 
         # self.logger.debug("For compound {}, time spent in applying is: {}, sandardisation: {}, cleanup: {}".format(self, total_rule_application, total_standardisation, total_clean_up))
-        if self.single_worker and self._pool is notNone:
+        if self.single_worker and self._pool is not None:
             # Try this to see if I still have a bug
             self._pool.close()
             self._pool = None
