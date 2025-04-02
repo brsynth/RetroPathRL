@@ -16,21 +16,49 @@ import csv
 import random
 
 # RP3 specific packages
-from compound import Compound, unpickle, CompoundDefinitionException, ChemConversionError
+from compound import (
+    Compound,
+    unpickle,
+    CompoundDefinitionException,
+    ChemConversionError,
+)
 from chemical_compounds_state import ChemicalCompoundState
 from MCTS_node import MCTS_node
 from representation import Test_representation, Test_to_file
-from UCT_policies import Biochemical_UCT_1, Nature_UCT, Classical_UCT_RAVE, Classical_UCT_with_bias, Classical_UCT, \
-    Biochemical_UCT_1_with_RAVE, Biochemical_UCT_with_progressive_bias, Chemical_UCT_1, Biological_UCT_1, \
-    Biochemical_UCT_with_toxicity
-from Rollout_policies import Rollout_policy_first, Rollout_policy_random_uniform_on_biochemical_multiplication_score, Rollout_policy_random_uniform
+from UCT_policies import (
+    Biochemical_UCT_1,
+    Nature_UCT,
+    Classical_UCT_RAVE,
+    Classical_UCT_with_bias,
+    Classical_UCT,
+    Biochemical_UCT_1_with_RAVE,
+    Biochemical_UCT_with_progressive_bias,
+    Chemical_UCT_1,
+    Biological_UCT_1,
+    Biochemical_UCT_with_toxicity,
+)
+from Rollout_policies import (
+    Rollout_policy_first,
+    Rollout_policy_random_uniform_on_biochemical_multiplication_score,
+    Rollout_policy_random_uniform,
+)
 from rewarding import Basic_Rollout_Reward, RolloutRewards
 from rule_sets_examples import applicable_rules_10_dict
-from rule_sets_similarity import get_rules_and_score, full_rules_forward_H, full_rules_retro_H, full_rules_forward_no_H, \
-    full_rules_retro_no_H
+from rule_sets_similarity import (
+    get_rules_and_score,
+    full_rules_forward_H,
+    full_rules_retro_H,
+    full_rules_forward_no_H,
+    full_rules_retro_no_H,
+)
 from pathway import Pathway
-from pathway_scoring import RandomPathwayScorer, constant_pathway_scoring, null_pathway_scoring, \
-    biological_pathway_scoring, biochemical_pathway_scoring
+from pathway_scoring import (
+    RandomPathwayScorer,
+    constant_pathway_scoring,
+    null_pathway_scoring,
+    biological_pathway_scoring,
+    biochemical_pathway_scoring,
+)
 from tree_viewer import Tree_viewer
 from organisms import (
 
@@ -107,6 +135,7 @@ class CompoundInSink(Exception):
         with open("{}/in_sink".format(folder_to_save), "w") as results_file:
             pass
 
+
 class InvalidSink(Exception):
     """Class for raising exception if sink is invalid."""
 
@@ -115,7 +144,7 @@ class InvalidSink(Exception):
         self.message = "Invalid (empty) sink"
 
 
-class Tree(object):
+class Tree:
     """
     Defines a search on the Tree according to
     - defined policy
@@ -132,35 +161,37 @@ class Tree(object):
 
     logger = logging.getLogger(__name__)
 
-    def __init__(self,
-                 root_state,  # starting chemical compound state (contains the target Compound only)
-                 itermax=2,  # Iteration budget
-                 time_budget=20, # Time budget
-                 expansion_width=10,  # Number of allwoed children
-                 available_rules=None,  # Rule dataset that can be used
-                 rewarding=Basic_Rollout_Reward,  # How to reward the chemical state after rollout
-                 max_depth=5,  # Maximum number of reactions to be used
-                 max_rollout=3,
-                 number_rollout=1,  # if parallel, number of different rollouts performed. NOT USED
-                 UCT_policy="Classical_UCT",
-                 UCT_parameters={"UCTK": 2, "bias_k": 0},
-                 Rollout_policy="Rollout_policy_first",
-                 Rollout_parameters={"rollout_timeout": 0.2},
-                 print_tree_information=True,
-                 parallel=False,
-                 main_layer_tree=False,
-                 main_layer_chassis=True,
-                 organism=ecoli_chassis_H,
-                 chemical_scorer="RandomChemicalScorer",
-                 biological_scorer="RandomBiologicalScorer",
-                 folder_to_save="tests/generated_jsons",
-                 virtual_visits=0,
-                 progressive_bias_strategy=None,
-                 progressive_widening=False,
-                 heavy_saving=False,
-                 minimal_visit_counts=1,
-                 use_RAVE=False,
-                 pathway_scoring="null_pathway_scoring"):
+    def __init__(
+        self,
+        root_state,  # starting chemical compound state (contains the target Compound only)
+        itermax=2,  # Iteration budget
+        time_budget=20,  # Time budget
+        expansion_width=10,  # Number of allwoed children
+        available_rules=None,  # Rule dataset that can be used
+        rewarding=Basic_Rollout_Reward,  # How to reward the chemical state after rollout
+        max_depth=5,  # Maximum number of reactions to be used
+        max_rollout=3,
+        number_rollout=1,  # if parallel, number of different rollouts performed. NOT USED
+        UCT_policy="Classical_UCT",
+        UCT_parameters={"UCTK": 2, "bias_k": 0},
+        Rollout_policy="Rollout_policy_first",
+        Rollout_parameters={"rollout_timeout": 0.2},
+        print_tree_information=True,
+        parallel=False,
+        main_layer_tree=False,
+        main_layer_chassis=True,
+        organism=ecoli_chassis_H,
+        chemical_scorer="RandomChemicalScorer",
+        biological_scorer="RandomBiologicalScorer",
+        folder_to_save="tests/generated_jsons",
+        virtual_visits=0,
+        progressive_bias_strategy=None,
+        progressive_widening=False,
+        heavy_saving=False,
+        minimal_visit_counts=1,
+        use_RAVE=False,
+        pathway_scoring="null_pathway_scoring",
+    ):
         # Chemical equality between nodes in the stree: only main layer or full inchi
         self.main_layer_tree = main_layer_tree
         self.main_layer_chassis = main_layer_chassis
@@ -179,21 +210,26 @@ class Tree(object):
         self.root_state.set_chemical_scorer(chemical_scorer)
         self.root_state.set_biological_scorer(biological_scorer)
 
-        self.scorer_info = "Chemical scoring is {}\n. Biological scoring is {}\n".format(chemical_scorer,
-                                                                                         biological_scorer)
+        self.scorer_info = (
+            "Chemical scoring is {}\n. Biological scoring is {}\n".format(
+                chemical_scorer, biological_scorer
+            )
+        )
         # Define initial node of the Tree with all previous information
-        self.root_node = MCTS_node(root_state,
-                                   rewarding=rewarding,
-                                   expansion_width=expansion_width,
-                                   maximum_depth=max_depth,
-                                   main_layer_tree=self.main_layer_tree,
-                                   main_layer_chassis=self.main_layer_chassis,
-                                   chemical_scorer=chemical_scorer,
-                                   biological_scorer=biological_scorer,
-                                   virtual_visits=virtual_visits,
-                                   progressive_bias_strategy=progressive_bias_strategy,
-                                   minimal_visit_counts=minimal_visit_counts,
-                                   use_RAVE=use_RAVE)
+        self.root_node = MCTS_node(
+            root_state,
+            rewarding=rewarding,
+            expansion_width=expansion_width,
+            maximum_depth=max_depth,
+            main_layer_tree=self.main_layer_tree,
+            main_layer_chassis=self.main_layer_chassis,
+            chemical_scorer=chemical_scorer,
+            biological_scorer=biological_scorer,
+            virtual_visits=virtual_visits,
+            progressive_bias_strategy=progressive_bias_strategy,
+            minimal_visit_counts=minimal_visit_counts,
+            use_RAVE=use_RAVE,
+        )
         # Defining attributes from init
         self.expansion_width = expansion_width
         self.progressive_widening = progressive_widening
@@ -216,11 +252,9 @@ class Tree(object):
 
         self.parallel = parallel
         if self.parallel:
-            """
-            Should not be used at the moment.
-            Used to conduct multiple rollouts in parallel.
-            Impossible with current RDKit lack of timeout
-            """
+            # Should not be used at the moment.
+            # Used to conduct multiple rollouts in parallel.
+            # Impossible with current RDKit lack of timeout
             self.worker = worker_Rollout_with_array
             self.number_rollout = number_rollout
         else:
@@ -304,9 +338,11 @@ class Tree(object):
                 while node.children != [] and not node.terminal:
                     if node.flag_for_extension:
                         # When extending a previous tree.
-                        node.expand_later_iteration(extension_length = node.flag_extension_length,
-                                            maximum_depth = node.flag_maximum_depth,
-                                            chemical_scoring_configuration = node.flag_chemical_scoring_configuration)
+                        node.expand_later_iteration(
+                            extension_length=node.flag_extension_length,
+                            maximum_depth=node.flag_maximum_depth,
+                            chemical_scoring_configuration=node.flag_chemical_scoring_configuration,
+                        )
 
                     if not self.progressive_widening and node.moves == []:
                         # Go down the tree while all moves from a node has been expanded.
@@ -347,11 +383,9 @@ class Tree(object):
                     start_rollout_time = time.time()
                     allowed_rollout = min(self.max_rollout, self.max_depth - node.level)
                     if self.parallel:
-                        """
-                        Not in use at the moment.
-                        Made for performing multiple rollouts on the same node.
-                        Was temporarily suspended due to the necessity of encapsulating Rdkit preocesses.
-                        """
+                        # Not in use at the moment.
+                        # Made for performing multiple rollouts on the same node.
+                        # Was temporarily suspended due to the necessity of encapsulating Rdkit preocesses.
                         shared_array_for_rollout = mp.Array('d', self.number_rollout)
                         kwargs_local = {"state": node.state,
                                         "rewarding": self.rewarding,
@@ -362,7 +396,7 @@ class Tree(object):
                                         initargs=(shared_array_for_rollout, kwargs_local))
                         try:
                             _pool.map(worker_Rollout_with_array, range(self.number_rollout))
-                        except mp.TimeoutError as e:
+                        except mp.TimeoutError:
                             self.logger.warning("Time out in parllel workers for node \n{}".format(node))
                             kill(_pool)
                         result, solved = np.mean(shared_array_for_rollout[:]), self.rewarding.full_state_reward in shared_array_for_rollout[:]
@@ -372,15 +406,29 @@ class Tree(object):
                         state = node.rollout(rollout_number=allowed_rollout, RolloutPolicy=RolloutPolicy)
 
                         if retrosynthesis:
-                            result = state.GetResults_from_InChI_Keys(rewarding=self.rewarding,
-                                                                      main_layer=self.main_layer_chassis)
-                            solved = state.GetResults_from_InChI_Keys(rewarding=self.rewarding,
-                                                                      main_layer=self.main_layer_chassis) == self.rewarding.full_state_reward
+                            result = state.GetResults_from_InChI_Keys(
+                                rewarding=self.rewarding,
+                                main_layer=self.main_layer_chassis,
+                            )
+                            solved = (
+                                state.GetResults_from_InChI_Keys(
+                                    rewarding=self.rewarding,
+                                    main_layer=self.main_layer_chassis,
+                                )
+                                == self.rewarding.full_state_reward
+                            )
                         elif biosensor:
-                            result = state.GetResultsForBiosensors(rewarding=self.rewarding,
-                                                                   main_layer=self.main_layer_chassis)
-                            solved = state.GetResultsForBiosensors(rewarding=self.rewarding,
-                                                                   main_layer=self.main_layer_chassis) == self.rewarding.full_state_reward
+                            result = state.GetResultsForBiosensors(
+                                rewarding=self.rewarding,
+                                main_layer=self.main_layer_chassis,
+                            )
+                            solved = (
+                                state.GetResultsForBiosensors(
+                                    rewarding=self.rewarding,
+                                    main_layer=self.main_layer_chassis,
+                                )
+                                == self.rewarding.full_state_reward
+                            )
                         else:
                             raise NotImplementedError
                     self.logger.info("Rollout results are {}, {}".format(result, solved))
@@ -390,15 +438,27 @@ class Tree(object):
                     start_rollout_time = time.time()
                     state = node.state
                     if retrosynthesis:
-                        result = state.GetResults_from_InChI_Keys(rewarding=self.rewarding,
-                                                                  main_layer=self.main_layer_chassis)
-                        solved = state.GetResults_from_InChI_Keys(rewarding=self.rewarding,
-                                                                  main_layer=self.main_layer_chassis) == self.rewarding.full_state_reward
+                        result = state.GetResults_from_InChI_Keys(
+                            rewarding=self.rewarding, main_layer=self.main_layer_chassis
+                        )
+                        solved = (
+                            state.GetResults_from_InChI_Keys(
+                                rewarding=self.rewarding,
+                                main_layer=self.main_layer_chassis,
+                            )
+                            == self.rewarding.full_state_reward
+                        )
                     elif biosensor:
-                        result = state.GetResultsForBiosensors(rewarding=self.rewarding,
-                                                               main_layer=self.main_layer_chassis)
-                        solved = state.GetResultsForBiosensors(rewarding=self.rewarding,
-                                                               main_layer=self.main_layer_chassis) == self.rewarding.full_state_reward
+                        result = state.GetResultsForBiosensors(
+                            rewarding=self.rewarding, main_layer=self.main_layer_chassis
+                        )
+                        solved = (
+                            state.GetResultsForBiosensors(
+                                rewarding=self.rewarding,
+                                main_layer=self.main_layer_chassis,
+                            )
+                            == self.rewarding.full_state_reward
+                        )
                     else:
                         raise NotImplementedError
                     if solved and not node.has_a_solved_child:
@@ -413,8 +473,9 @@ class Tree(object):
                         else:
                             best_path = None
                             for path in found_pathway:
-                                name = str(self.root_state.compound_list[0]) + "iteration_{}_{}".format(i,
-                                                                                                    path["number"])
+                                name = str(
+                                    self.root_state.compound_list[0]
+                                ) + "iteration_{}_{}".format(i, path["number"])
                                 if self.heavy_saving:
                                     path["pathway"].save(name, folder_address=self.folder_to_save_pickles)
                                 result = pathway_scoring.calculate(path["pathway"])
@@ -762,13 +823,17 @@ class Tree(object):
         Currently, best according to number of visits.
         """
 
-        best_pathway = Pathway(first_iteration=-1, target=None,
-                               compounds=[], moves=[],
-                               main_layer=self.main_layer_chassis,
-                               organism=self.organism,
-                               edges=[],
-                               nodes_compounds=[],
-                               nodes_transformations=[])
+        best_pathway = Pathway(
+            first_iteration=-1,
+            target=None,
+            compounds=[],
+            moves=[],
+            main_layer=self.main_layer_chassis,
+            organism=self.organism,
+            edges=[],
+            nodes_compounds=[],
+            nodes_transformations=[],
+        )
         target = self.root_state.compound_list[0]
         best_pathway.add_compound(target, is_source=1)
         if policy == "visits":
@@ -796,13 +861,17 @@ class Tree(object):
         pathways_to_print = []
         pathway_iteration = 1
         if self.root_node.has_a_solved_child:
-            initial_pathway = Pathway(first_iteration=-1, target=None,
-                                      compounds=[], moves=[],
-                                      main_layer=self.main_layer_chassis,
-                                      organism=self.organism,
-                                      edges=[],
-                                      nodes_compounds=[],
-                                      nodes_transformations=[])
+            initial_pathway = Pathway(
+                first_iteration=-1,
+                target=None,
+                compounds=[],
+                moves=[],
+                main_layer=self.main_layer_chassis,
+                organism=self.organism,
+                edges=[],
+                nodes_compounds=[],
+                nodes_transformations=[],
+            )
 
             target = self.root_state.compound_list[0]
             initial_pathway.add_compound(target, is_source=1)
@@ -874,13 +943,17 @@ class Tree(object):
         pathways_to_print = []
         pathway_iteration = 1
 
-        full_scope = Pathway(first_iteration=-1, target=None,
-                             compounds=[], moves=[],
-                             main_layer=self.main_layer_chassis,
-                             organism=self.organism,
-                             edges=[],
-                             nodes_compounds=[],
-                             nodes_transformations=[])
+        full_scope = Pathway(
+            first_iteration=-1,
+            target=None,
+            compounds=[],
+            moves=[],
+            main_layer=self.main_layer_chassis,
+            organism=self.organism,
+            edges=[],
+            nodes_compounds=[],
+            nodes_transformations=[],
+        )
 
         target = self.root_state.compound_list[0]
         full_scope.add_compound(target, is_source=1)
@@ -913,13 +986,17 @@ class Tree(object):
         if folder_to_save is None:
             folder_to_save = self.folder_to_save
 
-        full_tree = Pathway(first_iteration=iteration, target=None,
-                            compounds=[], moves=[],
-                            main_layer=self.main_layer_chassis,
-                            organism=self.organism,
-                            edges=[],
-                            nodes_compounds=[],
-                            nodes_transformations=[])
+        full_tree = Pathway(
+            first_iteration=iteration,
+            target=None,
+            compounds=[],
+            moves=[],
+            main_layer=self.main_layer_chassis,
+            organism=self.organism,
+            edges=[],
+            nodes_compounds=[],
+            nodes_transformations=[],
+        )
 
         target = self.root_state.compound_list[0]
         full_tree.add_compound(target, is_source=1)
@@ -953,13 +1030,17 @@ class Tree(object):
         pathways_to_print = []
         pathway_iteration = 1
 
-        full_scope = Pathway(first_iteration=-1, target=None,
-                             compounds=[], moves=[],
-                             main_layer=self.main_layer_chassis,
-                             organism=self.organism,
-                             edges=[],
-                             nodes_compounds=[],
-                             nodes_transformations=[])
+        full_scope = Pathway(
+            first_iteration=-1,
+            target=None,
+            compounds=[],
+            moves=[],
+            main_layer=self.main_layer_chassis,
+            organism=self.organism,
+            edges=[],
+            nodes_compounds=[],
+            nodes_transformations=[],
+        )
 
         target = self.root_state.compound_list[0]
         full_scope.add_compound(target, is_source=1)
@@ -1002,8 +1083,11 @@ class Tree(object):
             flagged_nodes = flagged_nodes + 1
             for child in node.children:
                 nodes_to_treat.append(child)
-            node.flag_node_for_extension(extension_length=extension_length, maximum_depth=maximum_depth,
-                                         chemical_scoring_configuration = chemical_scoring_configuration)
+            node.flag_node_for_extension(
+                extension_length=extension_length,
+                maximum_depth=maximum_depth,
+                chemical_scoring_configuration=chemical_scoring_configuration,
+            )
         assert flagged_nodes == total_len
         logging.info("Flagged {} nodes".format(flagged_nodes))
 
@@ -1041,7 +1125,7 @@ def __cli():
             representation = Test_to_file
         return representation
 
-    def get_organism(biosensor, organism_name = "none", complementary_sink=None, add_Hs=True):
+    def get_organism(biosensor, organism_name="none", complementary_sink=None, add_Hs=True):
         """
         Imports sinks.
         - detectable compounds for biosensors
@@ -1090,142 +1174,238 @@ def __cli():
             else:
                 logging.warning("This organism is not implemented yet: {}".format(organism_name))
                 raise NotImplementedError
-        if not complementary_sink is None and organism_name != "none":
+        if complementary_sink is not None and organism_name != "none":
             cmpds_to_add = import_organism_from_csv(complementary_sink, add_Hs=add_Hs)
             organism.merge_states(cmpds_to_add)
             logging.info("Add compounds from {} to the sink".format(complementary_sink))
-        return(organism)
+        return organism
 
     d = "All arguments to run a nice MCTS"
     parser = argparse.ArgumentParser(description=d)
     # Logs and saving information
-    parser.add_argument("--verbose", help="Default logger is INFO, switch to DEBUG is specified",
-                        dest='verbose', action='store_true', default=False)
-    parser.add_argument("--log_file", help="Default logger is stderr, switch to log_file if specified",
-                        default=None)
-    parser.add_argument("--folder_to_save",
-                        help="Folder to store results. Default: temp",
-                        default="temp")
-    parser.add_argument("--heavy_saving",
-                        help='If True, will save the tree each max_iteration/10',
-                        default=False,
-                        type=lambda x: (str(x).lower() == 'true'))
-    parser.add_argument("--stop_at_first_result",
-                        help='If True, will stop the first time it encounters a fully solved pathway',
-                        default=False,
-                        type=lambda x: (str(x).lower() == 'true'))
+    parser.add_argument(
+        "--verbose",
+        help="Default logger is INFO, switch to DEBUG is specified",
+        dest="verbose",
+        action="store_true",
+        default=False,
+    )
+    parser.add_argument(
+        "--log_file",
+        help="Default logger is stderr, switch to log_file if specified",
+        default=None,
+    )
+    parser.add_argument(
+        "--folder_to_save",
+        help="Folder to store results. Default: temp",
+        default="temp",
+    )
+    parser.add_argument(
+        "--heavy_saving",
+        help="If True, will save the tree each max_iteration/10",
+        default=False,
+        type=lambda x: (str(x).lower() == "true"),
+    )
+    parser.add_argument(
+        "--stop_at_first_result",
+        help="If True, will stop the first time it encounters a fully solved pathway",
+        default=False,
+        type=lambda x: (str(x).lower() == "true"),
+    )
     # Compound information
-    parser.add_argument("--c_name", help="Compound name. Defaults to None (InchiKey)",
-                        default=None)
+    parser.add_argument(
+        "--c_name", help="Compound name. Defaults to None (InchiKey)", default=None
+    )
     # One of the next 2 arguments has to be specified to give a target structure.
-    parser.add_argument("--c_smiles", help="Compound smiles", default = None)
-    parser.add_argument("--c_inchi", help="Compound inchi", default = None)
+    parser.add_argument("--c_smiles", help="Compound smiles", default=None)
+    parser.add_argument("--c_inchi", help="Compound inchi", default=None)
     # Timeouts on rdkit processes
-    parser.add_argument("--fire_timeout", help = "Time allowed for firing one rule on one substrate",
-                        type = float, default = 1)
-    parser.add_argument("--standardisation_timeout", help = "Time allowed for standardising results from one application",
-                        type = float, default = 5)
-    # Complementary sink: if we need to supplement the media or use another sink than the provided ones.
-    parser.add_argument("--organism_name", default = "ecoli",
-                        choices = ["none", "test", "ecoli", "core_ecoli", "bsubtilis", "ijo1366"])
-    parser.add_argument("--complementary_sink",
-                        help="address of a csv file containing compounds to add",
-                        default=None)
+    parser.add_argument(
+        "--fire_timeout",
+        help="Time allowed for firing one rule on one substrate",
+        type=float,
+        default=1,
+    )
+    parser.add_argument(
+        "--standardisation_timeout",
+        help="Time allowed for standardising results from one application",
+        type=float,
+        default=5,
+    )
+    # Complementary sink: if we need to supplement the media or use another sink than
+    # the provided ones.
+    parser.add_argument(
+        "--organism_name",
+        default="ecoli",
+        choices=["none", "test", "ecoli", "core_ecoli", "bsubtilis", "ijo1366"],
+    )
+    parser.add_argument(
+        "--complementary_sink",
+        help="address of a csv file containing compounds to add",
+        default=None,
+    )
     # Visualisation
-    parser.add_argument("--representation",
-                        help="If activated, uses colors for representation. Otherwise, gedit compatible",
-                        action='store_true', default=False)
+    parser.add_argument(
+        "--representation",
+        help="If activated, uses colors for representation. Otherwise, gedit compatible",
+        action="store_true",
+        default=False,
+    )
     #  General MCTS parameters
-    parser.add_argument("--itermax", help="Maximum number of tree iterations", default=1000, type=int)
-    parser.add_argument("--parallel",
-                        help="Using rollout parallelisation. Default is False. Should not be used at the moment.",
-                        type=lambda x: (str(x).lower() == 'true'), default=False)
-    parser.add_argument("--expansion_width", help="Maximum number of children", default=5, type=int)
+    parser.add_argument(
+        "--itermax", help="Maximum number of tree iterations", default=1000, type=int
+    )
+    parser.add_argument(
+        "--parallel",
+        help="Using rollout parallelisation. Default is False. Should not be used at the moment.",
+        type=lambda x: (str(x).lower() == "true"),
+        default=False,
+    )
+    parser.add_argument(
+        "--expansion_width", help="Maximum number of children", default=5, type=int
+    )
     parser.add_argument("--time_budget", help="Time budget", default=300, type=int)
-    parser.add_argument("--max_depth", help="Maximum depth of search", default=7, type=int)
-    parser.add_argument("--minimal_visit_counts", default=1, type=int,
-                        help="Minimal number of times a node has to be rolled out before his brothers can be expanded")
+    parser.add_argument(
+        "--max_depth", help="Maximum depth of search", default=7, type=int
+    )
+    parser.add_argument(
+        "--minimal_visit_counts",
+        default=1,
+        type=int,
+        help="Minimal number of times a node has to be rolled out before his brothers can be expanded",
+    )
     # UCT parameters
-    parser.add_argument("--UCT_policy",
-                        help="UCT policy for the tree search.",
-                        choices=["Classical_UCT", "Biological_UCT_1",
-                                 "Classical_UCT_with_bias", "Classical_UCT_RAVE",
-                                 'Biochemical_UCT_with_progressive_bias', 'Biochemical_UCT_1_with_RAVE',
-                                 "Biochemical_UCT_1", "Nature_UCT", "Chemical_UCT_1",
-                                 "Biological_UCT_1", "Biochemical_UCT_with_toxicity"],
-                        default="Classical_UCT")
-    parser.add_argument("--UCTK",
-                        help="UCTK for exploration/exploitation", type=float,
-                        default=2)
-    parser.add_argument("--bias_k",
-                        help="bias_k for exploration/exploitation", type=float,
-                        default=1)
-    parser.add_argument("--k_rave",
-                        help="k_rave for weighting of RAVE/MCTS. Number of visits before MCTS/RAVE = 50%%", type=float,
-                        default=50)
-    parser.add_argument("--use_RAVE",
-                        help="Use rave or not",
-                        type=lambda x: (str(x).lower() == 'true'), default=False)
+    parser.add_argument(
+        "--UCT_policy",
+        help="UCT policy for the tree search.",
+        choices=[
+            "Classical_UCT",
+            "Biological_UCT_1",
+            "Classical_UCT_with_bias",
+            "Classical_UCT_RAVE",
+            "Biochemical_UCT_with_progressive_bias",
+            "Biochemical_UCT_1_with_RAVE",
+            "Biochemical_UCT_1",
+            "Nature_UCT",
+            "Chemical_UCT_1",
+            "Biological_UCT_1",
+            "Biochemical_UCT_with_toxicity",
+        ],
+        default="Classical_UCT",
+    )
+    parser.add_argument(
+        "--UCTK", help="UCTK for exploration/exploitation", type=float, default=2
+    )
+    parser.add_argument(
+        "--bias_k", help="bias_k for exploration/exploitation", type=float, default=1
+    )
+    parser.add_argument(
+        "--k_rave",
+        help="k_rave for weighting of RAVE/MCTS. Number of visits before MCTS/RAVE = 50%%",
+        type=float,
+        default=50,
+    )
+    parser.add_argument(
+        "--use_RAVE",
+        help="Use rave or not",
+        type=lambda x: (str(x).lower() == "true"),
+        default=False,
+    )
     # Rewarding
-    parser.add_argument("--penalty",
-                        help="penalty for fully unsolved state",
-                        type=int, default=-1)
-    parser.add_argument("--full_state_reward",
-                        help="full_state_reward for fully solved state",
-                        type=int, default=2)
-    parser.add_argument("--pathway_scoring",
-                        help="pathway scoring function",
-                        choices=["RandomPathwayScorer", "constant_pathway_scoring",
-                                 "null_pathway_scoring", "biological_pathway_scoring"],
-                        default="constant_pathway_scoring")
+    parser.add_argument(
+        "--penalty", help="penalty for fully unsolved state", type=int, default=-1
+    )
+    parser.add_argument(
+        "--full_state_reward",
+        help="full_state_reward for fully solved state",
+        type=int,
+        default=2,
+    )
+    parser.add_argument(
+        "--pathway_scoring",
+        help="pathway scoring function",
+        choices=[
+            "RandomPathwayScorer",
+            "constant_pathway_scoring",
+            "null_pathway_scoring",
+            "biological_pathway_scoring",
+        ],
+        default="constant_pathway_scoring",
+    )
     # Rollout parameters
-    parser.add_argument("--Rollout_policy",
-                        help="Rollout_policy for the tree search.",
-                        choices=["Rollout_policy_chemical_best",
-                                 "Rollout_policy_random_uniform_on_biochemical_multiplication_score",
-                                 "Rollout_policy_biological_best", "Rollout_policy_biochemical_addition_best",
-                                 "Rollout_policy_biochemical_multiplication_best", "Rollout_policy_random_uniform",
-                                 "Rollout_policy_random_uniform_on_chem_score",
-                                 "Rollout_policy_random_uniform_on_bio_score",
-                                 "Rollout_policy_random_uniform_on_biochemical_addition_score", "Rollout_policy_first"],
-                        default="Rollout_policy_first")
-    parser.add_argument("--max_rollout",
-                        help="Max rollout number", type=int,
-                        default=3)
+    parser.add_argument(
+        "--Rollout_policy",
+        help="Rollout_policy for the tree search.",
+        choices=[
+            "Rollout_policy_chemical_best",
+            "Rollout_policy_random_uniform_on_biochemical_multiplication_score",
+            "Rollout_policy_biological_best",
+            "Rollout_policy_biochemical_addition_best",
+            "Rollout_policy_biochemical_multiplication_best",
+            "Rollout_policy_random_uniform",
+            "Rollout_policy_random_uniform_on_chem_score",
+            "Rollout_policy_random_uniform_on_bio_score",
+            "Rollout_policy_random_uniform_on_biochemical_addition_score",
+            "Rollout_policy_first",
+        ],
+        default="Rollout_policy_first",
+    )
+    parser.add_argument("--max_rollout", help="Max rollout number", type=int, default=3)
 
     # Chemical and biological scoring
-    parser.add_argument("--chemical_scoring",
-                        help="Chemical scoring policy.",
-                        choices=["RandomChemicalScorer",
-                                 "SubstrateChemicalScorer",
-                                 "SubandprodChemicalScorer",
-                                 "ConstantChemicalScorer"],
-                        default="SubandprodChemicalScorer")
+    parser.add_argument(
+        "--chemical_scoring",
+        help="Chemical scoring policy.",
+        choices=[
+            "RandomChemicalScorer",
+            "SubstrateChemicalScorer",
+            "SubandprodChemicalScorer",
+            "ConstantChemicalScorer",
+        ],
+        default="SubandprodChemicalScorer",
+    )
     parser.add_argument("--biological_score_cut_off", default=0.1, type=float)
     parser.add_argument("--substrate_only_score_cut_off", default=0.3, type=float)
     parser.add_argument("--chemical_score_cut_off", default=0.3, type=float)
     # Bias parameters
-    parser.add_argument("--virtual_visits",
-                        help="Virtual visits", type=int,
-                        default=0)
-    parser.add_argument("--progressive_bias_strategy",
-                        help="Progressive bias strategy",
-                        default="max_reward")
-    parser.add_argument("--progressive_widening",
-                        help="progressive_widening",
-                        type=lambda x: (str(x).lower() == 'true'), default=False)
-    parser.add_argument("--diameter", nargs='+',
-                        help="Diameters to consider", default=[16], type=int)
-    parser.add_argument("--EC_filter", nargs='+',
-                        help="EC numbers to consider for rules", default=None, type=str)
-    parser.add_argument("--small", help="Use only a small subset", type=lambda x: (str(x).lower() == 'true'),
-                        default=False)
-    parser.add_argument("--seed",
-                        help="Seed", type=int,
-                        default=None)
+    parser.add_argument("--virtual_visits", help="Virtual visits", type=int, default=0)
+    parser.add_argument(
+        "--progressive_bias_strategy",
+        help="Progressive bias strategy",
+        default="max_reward",
+    )
+    parser.add_argument(
+        "--progressive_widening",
+        help="progressive_widening",
+        type=lambda x: (str(x).lower() == "true"),
+        default=False,
+    )
+    parser.add_argument(
+        "--diameter", nargs="+", help="Diameters to consider", default=[16], type=int
+    )
+    parser.add_argument(
+        "--EC_filter",
+        nargs="+",
+        help="EC numbers to consider for rules",
+        default=None,
+        type=str,
+    )
+    parser.add_argument(
+        "--small",
+        help="Use only a small subset",
+        type=lambda x: (str(x).lower() == "true"),
+        default=False,
+    )
+    parser.add_argument("--seed", help="Seed", type=int, default=None)
     # Load from a previously run tree
-    parser.add_argument("--tree_to_complete", help="Tree to restart the search from", default=None)
-    parser.add_argument("--folder_tree_to_complete", help="Tree to restart the search from", default=None)
+    parser.add_argument(
+        "--tree_to_complete", help="Tree to restart the search from", default=None
+    )
+    parser.add_argument(
+        "--folder_tree_to_complete",
+        help="Tree to restart the search from",
+        default=None,
+    )
 
     args = parser.parse_args()
     # Config folder where to save data
@@ -1245,7 +1425,7 @@ def __cli():
             format=log_format,
         )
     else:
-        if not "log" in args.log_file:
+        if "log" not in args.log_file:
             log_file = "log_" + args.log_file
         else:
             log_file = args.log_file
@@ -1256,23 +1436,25 @@ def __cli():
             datefmt='%d/%m/%Y %H:%M:%S',
             format=log_format,
         )
-    if not args.seed is None:
+    if args.seed is not None:
         random.seed(args.seed)
         logging.warning("Setting the seed at {}".format(args.seed))
 
     # Information from argparse
     representation = get_representation(args.representation)
-    rules, biological_scoring = get_rules_and_score(full_rules_forward_H=full_rules_forward_H,
-                                                    full_rules_retro_H=full_rules_retro_H,
-                                                    full_rules_forward_no_H=full_rules_forward_no_H,
-                                                    full_rules_retro_no_H=full_rules_retro_no_H,
-                                                    add_Hs=add_Hs,
-                                                    retro=retrosynthesis,
-                                                    diameters=args.diameter,
-                                                    small=args.small,
-                                                    c_name=args.c_name,
-                                                    filtering_EC=args.EC_filter)
-    if not args.EC_filter is None:
+    rules, biological_scoring = get_rules_and_score(
+        full_rules_forward_H=full_rules_forward_H,
+        full_rules_retro_H=full_rules_retro_H,
+        full_rules_forward_no_H=full_rules_forward_no_H,
+        full_rules_retro_no_H=full_rules_retro_no_H,
+        add_Hs=add_Hs,
+        retro=retrosynthesis,
+        diameters=args.diameter,
+        small=args.small,
+        c_name=args.c_name,
+        filtering_EC=args.EC_filter,
+    )
+    if args.EC_filter is not None:
         logging.info("Filtering rules based on EC number. Currently {} rules".format(len(rules.keys())))
 
     progressive_bias_strategy = get_progressive_bias(args.progressive_bias_strategy)
@@ -1329,16 +1511,18 @@ def __cli():
             raise RunModeError(retrosynthesis, biosensor)
         try:
             if args.tree_to_complete is None:
-                root_compound = Compound(csmiles = args.c_smiles,
-                                        InChI = args.c_inchi,
-                                        name = args.c_name,
-                                        max_moves = args.expansion_width,
-                                        stereo = False,
-                                        heavy_standardisation = True,
-                                        fire_timeout = args.fire_timeout,
-                                        chemical_scoring_configuration = chemical_scoring_configuration,
-                                        standardisation_timeout = args.standardisation_timeout)
-                state = ChemicalCompoundState([root_compound], representation = representation)  # state is not sanitised
+                root_compound = Compound(
+                    csmiles=args.c_smiles,
+                    InChI=args.c_inchi,
+                    name=args.c_name,
+                    max_moves=args.expansion_width,
+                    stereo=False,
+                    heavy_standardisation=True,
+                    fire_timeout=args.fire_timeout,
+                    chemical_scoring_configuration=chemical_scoring_configuration,
+                    standardisation_timeout=args.standardisation_timeout,
+                )
+                state = ChemicalCompoundState([root_compound], representation=representation)  # state is not sanitised
                 if biosensor:
                     present_in_state_detectable = organism.compound_in_state(root_compound)
                     if present_in_state_detectable:
@@ -1349,31 +1533,37 @@ def __cli():
                     if present_in_state_sink:
                         raise CompoundInSink(folder_to_save, root_compound)
 
-                search_tree = Tree(root_state=state,
-                                   itermax=args.itermax,
-                                   parallel=args.parallel,
-                                   available_rules=rules,
-                                   rewarding=rollout_rewards,
-                                   expansion_width=args.expansion_width,
-                                   time_budget=args.time_budget,
-                                   max_depth=args.max_depth,
-                                   UCT_policy=args.UCT_policy,
-                                   UCT_parameters={"UCTK": args.UCTK, "bias_k": args.bias_k, 'k_rave': args.k_rave},
-                                   Rollout_policy=args.Rollout_policy,
-                                   max_rollout=args.max_rollout,
-                                   organism=organism,
-                                   main_layer_tree=True,
-                                   main_layer_chassis=True,
-                                   biological_scorer=biological_scoring,
-                                   chemical_scorer=chemical_scoring,
-                                   folder_to_save=folder_to_save,
-                                   virtual_visits=args.virtual_visits,
-                                   progressive_bias_strategy=progressive_bias_strategy,
-                                   progressive_widening=args.progressive_widening,
-                                   heavy_saving=args.heavy_saving,
-                                   minimal_visit_counts=args.minimal_visit_counts,
-                                   use_RAVE=args.use_RAVE,
-                                   pathway_scoring=args.pathway_scoring)
+                search_tree = Tree(
+                    root_state=state,
+                    itermax=args.itermax,
+                    parallel=args.parallel,
+                    available_rules=rules,
+                    rewarding=rollout_rewards,
+                    expansion_width=args.expansion_width,
+                    time_budget=args.time_budget,
+                    max_depth=args.max_depth,
+                    UCT_policy=args.UCT_policy,
+                    UCT_parameters={
+                        "UCTK": args.UCTK,
+                        "bias_k": args.bias_k,
+                        "k_rave": args.k_rave,
+                    },
+                    Rollout_policy=args.Rollout_policy,
+                    max_rollout=args.max_rollout,
+                    organism=organism,
+                    main_layer_tree=True,
+                    main_layer_chassis=True,
+                    biological_scorer=biological_scoring,
+                    chemical_scorer=chemical_scoring,
+                    folder_to_save=folder_to_save,
+                    virtual_visits=args.virtual_visits,
+                    progressive_bias_strategy=progressive_bias_strategy,
+                    progressive_widening=args.progressive_widening,
+                    heavy_saving=args.heavy_saving,
+                    minimal_visit_counts=args.minimal_visit_counts,
+                    use_RAVE=args.use_RAVE,
+                    pathway_scoring=args.pathway_scoring,
+                )
             else:
                 search_tree = unpickle(file_name=args.tree_to_complete,
                                        type='tree',
@@ -1391,9 +1581,10 @@ def __cli():
                                                   representation=representation)  # state is not sanitised
                     if state != current_root_state:
                         raise IncorrectTreeLoading(
-                            "New root {} is different from old root {} when loading tree".format(root_compound,
-                                                                                                 current_root_state.compound_list[
-                                                                                                     0]))
+                            "New root {} is different from old root {} when loading tree".format(
+                                root_compound, current_root_state.compound_list[0]
+                            )
+                        )
                 except CompoundDefinitionException:
                     logging.warning("Use compound information from previous Tree")
                     root_compound = current_root_state
@@ -1411,15 +1602,17 @@ def __cli():
                 search_tree.set_rules(rules)  # Resetting the rules to new standards and not former tree
                 start_time = time.time()
                 logging.info("Starting flagging for extension at {}".format(start_time))
-                search_tree.flag_nodes_for_extension(extension_length=args.expansion_width,
-                                             maximum_depth=args.max_depth,
-                                             chemical_scoring_configuration = chemical_scoring_configuration)
+                search_tree.flag_nodes_for_extension(
+                    extension_length=args.expansion_width,
+                    maximum_depth=args.max_depth,
+                    chemical_scoring_configuration=chemical_scoring_configuration,
+                )
                 logging.info("Finished flagging for extension at {}".format(time.time() - start_time))
                 search_tree.find_full_scope(folder_to_save=folder_to_save, name="after_extending_nodes")
                 search_tree.jsonify_full_tree(file_name="after_extending_nodes")
             # Running the search for both trees (new or loaded)
             search_tree.run_search(args.stop_at_first_result)
-        except KeyboardInterrupt as e:
+        except KeyboardInterrupt:
             logging.warning("Keyboard interruption")
 
         search_tree.jsonify_full_tree()

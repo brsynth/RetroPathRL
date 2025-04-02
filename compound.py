@@ -11,30 +11,50 @@ import time
 import pickle
 import argparse
 
-# # Memory tracking - for development
-# from pympler import tracker, classtracker
-
 from multiprocessing import Pool, TimeoutError, current_process
-# from multiprocessing import Pool, Queue, Process, TimeoutError, Array, JoinableQueue
-#
+
 # Chemistry
 from rdkit import Chem, RDLogger, DataStructs
 from rdkit.Chem import AllChem
-from utilities.reactor.Utils import standardize_chemical, standardize_results, handle_results, ChemConversionError
-from utilities.reactor.cli import worker_match, worker_fire, kill, RuleConversionError
-# MCTS move wrapper
-from move import Move
-# MCTS scoring functions:
-from biological_scoring import BiologicalFullScoringH, BiologicalFullScoringRetroNoH, BiologicalFullScoringFwdNoH, BiologicalFullScoringRetroH, BiologicalFullScoringFwdH, RandomBiologicalScorer
+from utilities.reactor.Utils import (
+    standardize_chemical,
+    standardize_results,
+    handle_results,
+    ChemConversionError,
+)
+from utilities.reactor.cli import worker_fire, kill, RuleConversionError
 
-from chemical_scoring import RandomChemicalScorer, SubstrateChemicalScorer, SubandprodChemicalScorer, ConstantChemicalScorer
+# MCTS move wrapper
+from move import Move
+
+# MCTS scoring functions:
+from biological_scoring import (
+    BiologicalFullScoringH,
+    BiologicalFullScoringRetroNoH,
+    BiologicalFullScoringFwdNoH,
+    BiologicalFullScoringRetroH,
+    BiologicalFullScoringFwdH,
+    RandomBiologicalScorer,
+)
+
+from chemical_scoring import (
+    RandomChemicalScorer,
+    SubstrateChemicalScorer,
+    SubandprodChemicalScorer,
+    ConstantChemicalScorer,
+)
 
 # Data importation
-from rule_sets_similarity import get_rules_and_score, full_rules_forward_H, full_rules_retro_H, full_rules_forward_no_H, \
-    full_rules_retro_no_H
+from rule_sets_similarity import (
+    get_rules_and_score,
+    full_rules_forward_H,
+    full_rules_retro_H,
+    full_rules_forward_no_H,
+    full_rules_retro_no_H,
+)
+
 # Configuration
 from config import *
-
 if use_toxicity:
     from compound_scoring import toxicity_scorer
 
@@ -52,10 +72,13 @@ def worker_standardisation(kwargs):
                                 heavy = kwargs["heavy_standardisation"])
     return ans
 
+
 def worker_standard_results(kwargs):
     """Standardises results from a rule application"""
-    ans = standardize_results(kwargs["ans"], add_hs=kwargs["add_Hs"], rm_stereo=kwargs["rm_stereo"])
-    return(ans)
+    ans = standardize_results(
+        kwargs["ans"], add_hs=kwargs["add_Hs"], rm_stereo=kwargs["rm_stereo"]
+    )
+    return ans
 
 
 def _ask_DB(DB_CACHE, DB_REPLACE, rule_id, substrate_id):
@@ -99,7 +122,7 @@ def _moves_from_rdmols(original_compound, rdmols, move, main_layer,
     cleaned_rdmols = []
     list_of_moves = []
     if clean_up:
-        list_stoechiometry= []
+        list_stoechiometry = []
     else:
         list_stoechiometry = list_stoechiometry
     if not len(rdmols):
@@ -115,15 +138,19 @@ def _moves_from_rdmols(original_compound, rdmols, move, main_layer,
             # Looking whether rdmol objects repeat themselves.
             cleaned_set_list = []
             for mol_obj in list_rdmols:
-                compound = Compound(rdkit_obj = mol_obj, stereo = stereo,
-                                    max_moves = max_moves, fire_timeout = fire_timeout,
-                                    chemical_scoring_configuration = chemical_scoring_configuration)
-                # WARNING: forcing standardisation again due to stereo problems. Advise not to use stereo
+                compound = Compound(
+                    rdkit_obj=mol_obj,
+                    stereo=stereo,
+                    max_moves=max_moves,
+                    fire_timeout=fire_timeout,
+                    chemical_scoring_configuration=chemical_scoring_configuration,
+                )
+                # WARNING: forcing standardisation again due to stereo problems. Advise not to use stereo
                 # Stoechiometry information
                 if compound.InChIKey not in stoechiometry.keys():
                     stoechiometry[compound.InChIKey] = 1
                 if clean_up:
-                    if compound.in_list(results_as_compound_objects, main_layer = main_layer):
+                    if compound.in_list(results_as_compound_objects, main_layer=main_layer):
                         stoechiometry[compound.InChIKey] = stoechiometry[compound.InChIKey] + 1
                     else:
                         results_as_compound_objects.append(compound)
@@ -131,8 +158,15 @@ def _moves_from_rdmols(original_compound, rdmols, move, main_layer,
                 else:
                     results_as_compound_objects.append(compound)
                     cleaned_set_list.append(mol_obj)
-            if original_compound.in_list(results_as_compound_objects, main_layer = main_layer):
-                original_compound.logger.info("Self generating rule for compound {} and rule {}, set {}. Move is discarded in {}".format(original_compound.name, rule_id, set_number, current_process().name))
+            if original_compound.in_list(results_as_compound_objects, main_layer=main_layer):
+                original_compound.logger.info(
+                    "Self generating rule for compound {} and rule {}, set {}. Move is discarded in {}".format(
+                        original_compound.name,
+                        rule_id,
+                        set_number,
+                        current_process().name,
+                    )
+                )
             else:
                 # Add the current set to the cleaned rdmol list, it passed all filters.
                 move_inside_set.set_set_number(set_number)
@@ -143,16 +177,20 @@ def _moves_from_rdmols(original_compound, rdmols, move, main_layer,
                     move_inside_set.set_stoechiometry(list_stoechiometry[set_number])
 
                 move_inside_set.set_product_list(results_as_compound_objects)
-                chemical_score = chemical_scorer.calculate(compound =original_compound, rule = move_inside_set.rid,
-                                                        products = move_inside_set.full_product_list(),
-                                                        original_substrates_list = original_substrates_list,
-                                                        original_products_list_list = original_products_list_list)
+                chemical_score = chemical_scorer.calculate(
+                    compound=original_compound,
+                    rule=move_inside_set.rid,
+                    products=move_inside_set.full_product_list(),
+                    original_substrates_list=original_substrates_list,
+                    original_products_list_list=original_products_list_list,
+                )
                 move_inside_set.set_chemical_score(chemical_score)
                 move_inside_set.delete_intermediate_chemical_score()
                 cleaned_rdmols.append(cleaned_set_list)
                 list_of_moves.append(move_inside_set)
         assert len(list_of_moves) == len(list_stoechiometry)
-        return(cleaned_rdmols, list_of_moves, list_stoechiometry)
+        return (cleaned_rdmols, list_of_moves, list_stoechiometry)
+
 
 def calculate_from_available_rules(arguments):
     """
@@ -173,25 +211,29 @@ def calculate_from_available_rules(arguments):
     rdmols_from_DB = db_reply['list_rdmols']
     list_stoechiometry = db_reply['list_stoechiometry']
 
-    # rdmols_from_DB = None
+    # rdmols_from_DB = None
     if not db_reply['found']:
-        # Initilise the rule
+        # Initilise the rule
         rsmarts = rule_characteristics["Rule_SMARTS"]
         try:
             rd_rule = AllChem.ReactionFromSmarts(rsmarts)
             rd_rule.Initialize()
         except Exception as e:
             raise RuleConversionError(e) from e
-        r = RuleBurnerCore(rd_rule = rd_rule, rd_mol = rdmol)
+        r = RuleBurnerCore(rd_rule=rd_rule, rd_mol=rdmol)
         ans = r.fire()
         if ans != ():
-        # Creating the basic Move object for metadata
-            move = Move(rsmart = rule_characteristics["Rule_SMARTS"],
-                        rid = rule_id,
-                        compound_id = inchikey,
-                        biological_score = rule_characteristics["biological_score"],
-                        EC_number= rule_characteristics["EC_number"])
-            rdmols, failed = standardize_results(ans, add_hs=add_Hs, rm_stereo=not stereo)  # !!!! add_hs=False To be used only to fill the DB
+            # Creating the basic Move object for metadata
+            move = Move(
+                rsmart=rule_characteristics["Rule_SMARTS"],
+                rid=rule_id,
+                compound_id=inchikey,
+                biological_score=rule_characteristics["biological_score"],
+                EC_number=rule_characteristics["EC_number"],
+            )
+            rdmols, failed = standardize_results(
+                ans, add_hs=add_Hs, rm_stereo=not stereo
+            )  # !!!! add_hs=False To be used only to fill the DB
             clean_up = True
         else:
             rdmols = None
@@ -199,28 +241,31 @@ def calculate_from_available_rules(arguments):
         rdmols = rdmols_from_DB
         clean_up = False
         # Stoechiometry needs to come from the DB
-        move = Move(rsmart = rule_characteristics["Rule_SMARTS"],
-                    rid = rule_id,
-                    compound_id = inchikey,
-                    biological_score = rule_characteristics["biological_score"],
-                    EC_number= rule_characteristics["EC_number"])
+        move = Move(
+            rsmart=rule_characteristics["Rule_SMARTS"],
+            rid=rule_id,
+            compound_id=inchikey,
+            biological_score=rule_characteristics["biological_score"],
+            EC_number=rule_characteristics["EC_number"],
+        )
 
-        # print("rdmols for rule {} is {}".format(rule_id, rdmols))
-    if not rdmols is None:
+    if rdmols is not None:
         original_substrates_list = rule_characteristics["substrate_ECFP"]
         original_products_list_list = rule_characteristics["products_ECFP"]
         move.set_intermediate_chemical_score(original_substrates_list, original_products_list_list)
-        cleaned_rdmols, list_of_moves, list_stoechiometry = _moves_from_rdmols(original_compound = cmp,
-                                                            rdmols = rdmols,
-                                                            move = move,
-                                                            main_layer =main_layer,
-                                                            chemical_scorer = chemical_scorer,
-                                                            clean_up = clean_up,
-                                                            stereo = stereo,
-                                                            max_moves = max_moves,
-                                                            fire_timeout = fire_timeout,
-                                                            rule_id = rule_id,
-                                                            list_stoechiometry = list_stoechiometry)
+        cleaned_rdmols, list_of_moves, list_stoechiometry = _moves_from_rdmols(
+            original_compound=cmp,
+            rdmols=rdmols,
+            move=move,
+            main_layer=main_layer,
+            chemical_scorer=chemical_scorer,
+            clean_up=clean_up,
+            stereo=stereo,
+            max_moves=max_moves,
+            fire_timeout=fire_timeout,
+            rule_id=rule_id,
+            list_stoechiometry=list_stoechiometry,
+        )
         logging.info("There are list_of_moves {} for rule {}".format(list_of_moves, rule_id))
     else:
         cleaned_rdmols = None
@@ -228,29 +273,31 @@ def calculate_from_available_rules(arguments):
     if DB_CACHE and DB_REPLACE:
         # Format document
         # Here, check it's not empty.
-        if not cleaned_rdmols is None:
+        if cleaned_rdmols is not None:
             list_list_inchikeys, list_list_inchis, list_list_smiles = handle_results(cleaned_rdmols)
         else:
             list_list_inchikeys, list_list_inchis, list_list_smiles, list_stoechiometry = [], [], [], []
         document = as_document(
-                rule_id=rule_id,
-                substrate_id=substrate_id,
-                list_list_inchikeys=list_list_inchikeys,
-                list_list_inchis=list_list_inchis,
-                list_list_smiles=list_list_smiles,
-                list_stoechiometry = list_stoechiometry)
-        # print("Exported document to dB {}".format(document))
+            rule_id=rule_id,
+            substrate_id=substrate_id,
+            list_list_inchikeys=list_list_inchikeys,
+            list_list_inchis=list_list_inchis,
+            list_list_smiles=list_list_smiles,
+            list_stoechiometry=list_stoechiometry,
+        )
+        # print("Exported document to dB {}".format(document))
         # Insert
         CACHE_MGR.insert(document)
-    # logging.info("For rule {}, return moves {}".format(rule_id, list_of_moves))
-    # print("For rule {}, return moves {}".format(rule_id, list_of_moves))
-    return(list_of_moves)
+    # logging.info("For rule {}, return moves {}".format(rule_id, list_of_moves))
+    return list_of_moves
     # time.sleep(random.randint(1, 10))
     # return(rule_id)
 
-def unpickle(file_name, type = "compound", folder_address = "pickled_data"):
-    with open('{}/{}_{}.pkl'.format(folder_address, type, file_name), 'rb') as input:
-        return(pickle.load(input))
+
+def unpickle(file_name, type="compound", folder_address="pickled_data"):
+    with open("{}/{}_{}.pkl".format(folder_address, type, file_name), "rb") as input:
+        return pickle.load(input)
+
 
 def worker_cmp(worker_id, in_queue, out_queue, factory_task, timeout=1):
     """
@@ -266,7 +313,6 @@ def worker_cmp(worker_id, in_queue, out_queue, factory_task, timeout=1):
         if pool_worker is None:
             pool_worker = Pool(processes=1)
             pool_version = pool_version + 1
-        # print(killing_array[int(worker_id)])
         if killing_array[int(worker_id)] > 0:
             logging.debug("Flushing the queue with worker {}".format(worker_id))
             while not in_queue.empty():
@@ -274,7 +320,7 @@ def worker_cmp(worker_id, in_queue, out_queue, factory_task, timeout=1):
                 # in_queue.task_done()
             kill(pool_worker)
             break
-            return()
+            return
 
         in_value = in_queue.get()
         # logging.debug("ID: {}, with rule ID {}".format(worker_id, in_value[0]))
@@ -286,16 +332,16 @@ def worker_cmp(worker_id, in_queue, out_queue, factory_task, timeout=1):
         ares = pool_worker.apply_async(factory_task, (in_value,))
         try:
             ans = ares.get(timeout=timeout)
-            if ans!= []:  #TODO adapt it for other types of respones from factories
+            if ans != []:  # TODO adapt it for other types of respones from factories
                 out_queue.put(ans)
             # out_queue.put(ans)
 
             # print(ans)
-        except TimeoutError as e:
+        except TimeoutError:
             kill(pool_worker)
             pool_worker = None
             logging.info("Worker {}. Pool {} has been killed for Timeout".format(worker_id, pool_version))
-    return()
+    return
 
 
 class FinishedException(Exception):
@@ -305,26 +351,30 @@ class FinishedException(Exception):
     def __str__(self):
         return self._msg
 
+
 class CompoundException(Exception):
     """Home made exception for Compound Class."""
     pass
 
+
 class UnSpecifiedTransformationError(CompoundException):
     """Raised when a Transformation is not specified by either smart or RuleID."""
 
-    def __init__(self, msg = "UnSpecifiedTransformationError"):
+    def __init__(self, msg="UnSpecifiedTransformationError"):
         self._msg = msg
 
     def __str__(self):
         return self._msg
+
 
 class CompoundDefinitionException(CompoundException):
     """When compound structure is not properly defined"""
-    def __init__(self, msg = "Not properly specified, lacking smiles or InChI"):
+    def __init__(self, msg="Not properly specified, lacking smiles or InChI"):
         self._msg = msg
 
     def __str__(self):
         return self._msg
+
 
 class Compound(object):
     """
@@ -338,24 +388,28 @@ class Compound(object):
     """
     logger = logging.getLogger(__name__)
 
-    def __init__(self,
-                 csmiles = None,
-                 InChI = None,
-                 name = None,
-                 stereo = False,
-                 rdkit_obj = None,
-                 synonyms = None,
-                 synonyms_names = None,
-                 max_moves = 5,
-                 single_worker = True,
-                 fire_timeout = 1,
-                 standardisation_timeout = 5,
-                 heavy_standardisation = False,
-                 force_add_H = None,
-                 chemical_scoring_configuration = {"biological_score_cut_off": 0.1,
-                 "substrate_only_score_cut_off": 0.3,
-                 "chemical_score_cut_off": 0.3},
-                 toxicity = None):
+    def __init__(
+        self,
+        csmiles=None,
+        InChI=None,
+        name=None,
+        stereo=False,
+        rdkit_obj=None,
+        synonyms=None,
+        synonyms_names=None,
+        max_moves=5,
+        single_worker=True,
+        fire_timeout=1,
+        standardisation_timeout=5,
+        heavy_standardisation=False,
+        force_add_H=None,
+        chemical_scoring_configuration={
+            "biological_score_cut_off": 0.1,
+            "substrate_only_score_cut_off": 0.3,
+            "chemical_score_cut_off": 0.3,
+        },
+        toxicity=None,
+    ):
         """
         Initialising a chemical coumpound.
         Mostly an RDKit wrapper with
@@ -416,7 +470,6 @@ class Compound(object):
             if self.toxicity is None:
                 self.toxicity = min(toxicity_scorer.calculate(self), 0)
                 self.logger.debug("Compound {} has a toxicity score of {}".format(self, self.toxicity))
-
 
     def eq_full_inchi_key(self, other):
         """
@@ -643,7 +696,7 @@ class Compound(object):
             policy = BiologicalFullScoringH
         else:
             raise NotImplementedError(biological_scorer)
-        return(policy)
+        return policy
 
     def _get_Chemical_scorer(self, chemical_scorer):
         if chemical_scorer == "RandomChemicalScorer":
@@ -656,7 +709,7 @@ class Compound(object):
             policy = ConstantChemicalScorer
         else:
             raise NotImplementedError(chemical_scorer)
-        return(policy)
+        return policy
 
     def _obtain_available_rules(self, available_rules, chemical_scorer, biological_scorer):
         """
@@ -668,7 +721,7 @@ class Compound(object):
         """
         rules_with_cut_off = {}
         # Extracting rules with a threshold
-        if not self.found_moves is None:
+        if self.found_moves is not None:
             already_tested_ids = [move.rid for move in self.found_moves]
         else:
             already_tested_ids = []
@@ -691,8 +744,15 @@ class Compound(object):
                         rules_with_cut_off[rule_id]["substrate_chemical_score"] = substrate_only_score
 
         # Sorting rules
-        sorted_rules = sorted(rules_with_cut_off.items(), key=lambda item: (item[1]["biological_score"] * item[1]["substrate_chemical_score"], item[0]), reverse=True)
-        return(sorted_rules)
+        sorted_rules = sorted(
+            rules_with_cut_off.items(),
+            key=lambda item: (
+                item[1]["biological_score"] * item[1]["substrate_chemical_score"],
+                item[0],
+            ),
+            reverse=True,
+        )
+        return sorted_rules
 
     def _apply_rule(self, rule_id, rd_rule):
         application_time_start = time.time()
@@ -715,25 +775,27 @@ class Compound(object):
                 ans = None
                 fire_error = str(e)
                 logging.error('TIMEOUT: cid={}, rid={}'.format(self, rule_id))
-                # time.sleep(0.01)
+                # time.sleep(0.01)
             except Exception as e:
                 ans = None
                 fire_error = str(e)
                 logging.warning(e)
         else:
-            r = RuleBurnerCore(rd_rule = rd_rule, rd_mol = self.rdmol)
+            r = RuleBurnerCore(rd_rule=rd_rule, rd_mol=self.rdmol)
             ans = r.fire()
         round_time = time.time() - application_time_start
 
         self.logger.debug("Applied rule {} on {} -{} in {}".format(rule_id, self, self.csmiles, round_time))
-        return(ans)
+        return ans
 
-    def obtain_applicable_transformation_with_move(self,
-                                                   available_rules,
-                                                   chemical_scorer = "RandomChemicalScorer",
-                                                   biological_scorer = "RandomBiologicalScorer",
-                                                   main_layer = True,
-                                                   extension = False):
+    def obtain_applicable_transformation_with_move(
+        self,
+        available_rules,
+        chemical_scorer="RandomChemicalScorer",
+        biological_scorer="RandomBiologicalScorer",
+        main_layer=True,
+        extension=False,
+    ):
         """
         Used to find applicable rules that respect scoring configuration.
         Calls functions for
@@ -748,12 +810,12 @@ class Compound(object):
         self.logger.info("Starting move obtention process with compound {} ({}) at {}".format(self, self.csmiles, start_time))
 
         if use_cache and self.InChIKey in home_made_cache.keys() and not extension:
-            # If already calculated during this run of the tree, and not extenting moves.
+            # If already calculated during this run of the tree, and not extenting moves.
             matching_moves = home_made_cache[self.InChIKey]
             self.logger.info("Retrieved moves in {} for compound {} - with caching".format(time.time()- start_time, self.InChIKey))
         else:
             matching_moves = []
-            # Obtain rules sorted by the score I'm interested in.
+            # Obtain rules sorted by the score I'm interested in.
             sorted_rules = self._obtain_available_rules(available_rules, chemical_scorer, biological_scorer)
             self.logger.info("{} available rules".format(len(sorted_rules)))
             for rule_id, rule_characteristics in sorted_rules:
@@ -777,12 +839,14 @@ class Compound(object):
                         raise RuleConversionError(e) from e
                     # Apply the rule
                     ans = self._apply_rule(rule_id, rd_rule)
-                    if not ans is None:
-                        move = Move(rsmart = rule_characteristics["Rule_SMARTS"],
-                                        rid = rule_id,
-                                        compound_id = self.InChIKey,
-                                        biological_score = rule_characteristics["biological_score"],
-                                        EC_number= rule_characteristics["EC_number"])
+                    if ans is not None:
+                        move = Move(
+                            rsmart=rule_characteristics["Rule_SMARTS"],
+                            rid=rule_id,
+                            compound_id=self.InChIKey,
+                            biological_score=rule_characteristics["biological_score"],
+                            EC_number=rule_characteristics["EC_number"],
+                        )
                         kwargs_standard = {
                               "ans": ans,
                               "add_Hs": add_Hs,
@@ -794,7 +858,7 @@ class Compound(object):
                         except TimeoutError as e:
                             self.logger.warning(e)
                             rdmols = []
-                        #  rdmols, failed = standardize_results(ans, add_hs=add_Hs, rm_stereo=not self.stereo)  # !!!! add_hs=False To be used only to fill the DB
+                        #  rdmols, failed = standardize_results(ans, add_hs=add_Hs, rm_stereo=not self.stereo)  # !!!! add_hs=False To be used only to fill the DB
                         clean_up = True
                         list_stoechiometry = []
                     else:
@@ -804,51 +868,58 @@ class Compound(object):
                     rdmols = db_reply['list_rdmols']
                     list_stoechiometry = db_reply['list_stoechiometry']
                     clean_up = False
-                    move = Move(rsmart = rule_characteristics["Rule_SMARTS"],
-                                rid = rule_id,
-                                compound_id = self.InChIKey,
-                                biological_score = rule_characteristics["biological_score"],
-                                EC_number= rule_characteristics["EC_number"])
+                    move = Move(
+                        rsmart=rule_characteristics["Rule_SMARTS"],
+                        rid=rule_id,
+                        compound_id=self.InChIKey,
+                        biological_score=rule_characteristics["biological_score"],
+                        EC_number=rule_characteristics["EC_number"],
+                    )
                 # If rdmols is still empty, then it's because the rule doesn't apply
                 original_substrates_list = rule_characteristics["substrate_ECFP"]
                 original_products_list_list = rule_characteristics["products_ECFP"]
                 try:
                     move.set_intermediate_chemical_score(original_substrates_list, original_products_list_list)
-                    cleaned_rdmols, list_of_moves, list_stoechiometry = _moves_from_rdmols(original_compound = self,
-                                                                        rdmols = rdmols,
-                                                                        move = move,
-                                                                        main_layer= main_layer,
-                                                                        chemical_scorer = chemical_scorer,
-                                                                        clean_up = clean_up,
-                                                                        stereo = self.stereo,
-                                                                        max_moves = self.max_moves,
-                                                                        fire_timeout = self._fire_timeout,
-                                                                        chemical_scoring_configuration = self.chemical_scoring_configuration,
-                                                                        rule_id = rule_id,
-                                                                        list_stoechiometry = list_stoechiometry)
+                    cleaned_rdmols, list_of_moves, list_stoechiometry = (
+                        _moves_from_rdmols(
+                            original_compound=self,
+                            rdmols=rdmols,
+                            move=move,
+                            main_layer=main_layer,
+                            chemical_scorer=chemical_scorer,
+                            clean_up=clean_up,
+                            stereo=self.stereo,
+                            max_moves=self.max_moves,
+                            fire_timeout=self._fire_timeout,
+                            chemical_scoring_configuration=self.chemical_scoring_configuration,
+                            rule_id=rule_id,
+                            list_stoechiometry=list_stoechiometry,
+                        )
+                    )
                     for move_inside_set in list_of_moves:
-                        if not move_inside_set.in_list(list_moves = matching_moves, main_layer= main_layer):
-                            # Add the move cut off on chemical score here, as I'll still want to have the rule in the DB.
+                        if not move_inside_set.in_list(list_moves=matching_moves, main_layer=main_layer):
+                            # Add the move cut off on chemical score here, as I'll still want to have the rule in the DB.
                             if move_inside_set.chemical_score >= self.chemical_scoring_configuration["chemical_score_cut_off"]:
                                 move_inside_set.calculate_rsmiles(self)
                                 matching_moves.append(move_inside_set)
                     end_time = time.time()
 
-                    if DB_CACHE and (DB_REPLACE or not db_reply['found']) and (end_time - start_time >=DB_time): # could add something about time for execution here
+                    if DB_CACHE and (DB_REPLACE or not db_reply['found']) and (end_time - start_time >=DB_time):  # could add something about time for execution here
                         # Format document
                         # Here, check it's not empty.
                         list_list_inchikeys = [move.product_list for move in list_of_moves]
                         list_list_inchikeys, list_list_inchis, list_list_smiles = handle_results(cleaned_rdmols)
                         document = as_document(
-                                rule_id=rule_id, substrate_id=self.InChIKey,
-                                list_list_inchikeys=list_list_inchikeys,
-                                list_list_inchis=list_list_inchis,
-                                list_list_smiles=list_list_smiles,
-                                list_stoechiometry = list_stoechiometry)
-                        # print("Exported document to dB {}".format(document))
+                            rule_id=rule_id,
+                            substrate_id=self.InChIKey,
+                            list_list_inchikeys=list_list_inchikeys,
+                            list_list_inchis=list_list_inchis,
+                            list_list_smiles=list_list_smiles,
+                            list_stoechiometry=list_stoechiometry,
+                        )
                         # Insert
                         CACHE_MGR.insert(document)
-                        # total_clean_up = total_clean_up + time.time() - clean_up_start
+                        # total_clean_up = total_clean_up + time.time() - clean_up_start
                 except UnboundLocalError as e:
                     self.logger.critical("Error {} when trying rule {} on compound {}. Moving to next rule".format(e, rule_id, self), exc_info=True)
             self.logger.info("For compound {}, matching moves are {}".format(self, matching_moves))
@@ -857,24 +928,27 @@ class Compound(object):
                 home_made_cache[self.InChIKey] = matching_moves
             self.logger.info("Calculated moves in {} for compound {} - without caching".format(time.time()- start_time, self.InChIKey))
 
-        # self.logger.debug("For compound {}, time spent in applying is: {}, sandardisation: {}, cleanup: {}".format(self, total_rule_application, total_standardisation, total_clean_up))
-        if self.single_worker and not self._pool is None:
+        # self.logger.debug("For compound {}, time spent in applying is: {}, sandardisation: {}, cleanup: {}".format(self, total_rule_application, total_standardisation, total_clean_up))
+        if self.single_worker and self._pool is notNone:
             # Try this to see if I still have a bug
             self._pool.close()
             self._pool = None
-            # 
+            #
             # Should have done a cloe, but for pickling doing None.
         self.found_moves = matching_moves
-        return(matching_moves)
+        return matching_moves
 
-    def __obtain_move_parallel(self, available_rules,
-                            chemical_scorer = "RandomChemicalScorer",
-                            biological_scorer = "RandomBiologicalScorer",
-                            main_layer = True,
-                            extension = False,
-                            num_workers = 4,
-                            timeout = 5,
-                            individual_cmp_time = 120):
+    def __obtain_move_parallel(
+        self,
+        available_rules,
+        chemical_scorer="RandomChemicalScorer",
+        biological_scorer="RandomBiologicalScorer",
+        main_layer=True,
+        extension=False,
+        num_workers=4,
+        timeout=5,
+        individual_cmp_time=120,
+    ):
         """
         DEPRECATED.
         Used to develop parallelisation.
@@ -901,25 +975,37 @@ class Compound(object):
         # Setting up the team
         team = list()
         for i in range(0, num_workers):
-            team.append(Process(target=worker, kwargs={'worker_id': i,'in_queue': in_queue,
-                                                        'out_queue': out_queue, 'timeout': timeout,
-                                                        "factory_task": factory_worker,
-                                                        "killing_array": killing_array, "POISON_PILL": POISON_PILL}))
+            team.append(
+                Process(
+                    target=worker,
+                    kwargs={
+                        "worker_id": i,
+                        "in_queue": in_queue,
+                        "out_queue": out_queue,
+                        "timeout": timeout,
+                        "factory_task": factory_worker,
+                        "killing_array": killing_array,
+                        "POISON_PILL": POISON_PILL,
+                    },
+                )
+            )
 
         if use_cache and self.InChIKey in home_made_cache.keys() and not extension:
-            # If already calculated during this run of the tree, and not extenting moves.
+            # If already calculated during this run of the tree, and not extenting moves.
             matching_moves = home_made_cache[self.InChIKey]
             self.logger.info("Retrieved moves in {} for compound {} - with caching".format(time.time()- start_time, self.InChIKey))
         else:
             sorted_rules = self._obtain_available_rules(available_rules)
-            substrate_info = {"cmp": self,
-                            "rdmol": self.rdmol,
-                            "inchikey": self.InChIKey,
-                            "stereo": self.stereo,
-                            "max_moves": self.max_moves,
-                            "fire_timeout": self._fire_timeout,
-                            "main_layer": main_layer,
-                            "chemical_scorer": chemical_scorer}
+            substrate_info = {
+                "cmp": self,
+                "rdmol": self.rdmol,
+                "inchikey": self.InChIKey,
+                "stereo": self.stereo,
+                "max_moves": self.max_moves,
+                "fire_timeout": self._fire_timeout,
+                "main_layer": main_layer,
+                "chemical_scorer": chemical_scorer,
+            }
             task_list = [(rule_id, rule_characteristics, substrate_info) for rule_id, rule_characteristics in sorted_rules]
             self.logger.info("Adding elements to the queue")
             #
@@ -942,13 +1028,13 @@ class Compound(object):
                             #     logging.info("Returned something empty {}".format(list_of_moves))
                             # else:
                             for move_inside_set in list_of_moves:
-                                if not move_inside_set.in_list(list_moves = matching_moves, main_layer= main_layer):
+                                if not move_inside_set.in_list(list_moves=matching_moves, main_layer=main_layer):
                                     matching_moves.append(move_inside_set)
                             # Will need to check here whether it's good or not
                             logging.info("total answer currently is {}".format(len(matching_moves)))
                     except Empty:
-                        # time.sleep(timeout)
-                        # print("nothing new")
+                        # time.sleep(timeout)
+                        # print("nothing new")
                         waiting_loops = waiting_loops + 1
 
                         # print('Currently empty')
@@ -969,9 +1055,7 @@ class Compound(object):
             except FinishedException:
                 self.logger.info("Finished the number of moves")
                 self.logger.info("Calculated moves in {} for compound {} - without caching".format(time.time()- start_time, self.InChIKey))
-
-                # print("using killing array")
-
+                # print("using killing array")
                 for i in range(len(team)):
                     killing_array[i] = 1
                 in_queue = Queue()
@@ -981,7 +1065,7 @@ class Compound(object):
                 while any([team_player.is_alive() for team_player in team]):
                     in_queue.put(POISON_PILL)
                 in_queue.join()
-                # time.sleep(0.01)
+                # time.sleep(0.01)
                 # for team_player in team:
                 #     team_player.join()
                 #     print("joining")
@@ -993,20 +1077,22 @@ class Compound(object):
         if use_cache:
             self.logger.info("Caching results for compound {}. The cache contained {}".format(self.InChIKey, len(home_made_cache.keys())))
             home_made_cache[self.InChIKey] = matching_moves
-        self.logger.info("Calculated moves in {} for compound {} - without caching".format(time.time()- start_time, self.InChIKey))
+        self.logger.info("Calculated moves in {} for compound {} - without caching".format(time.time() - start_time, self.InChIKey))
 
-        # print(matching_moves)
-        return(matching_moves)
+        return matching_moves
 
-    def __obtain_move_parallel_with_factory(self, available_rules,
-                            chemical_scorer = "RandomChemicalScorer",
-                            biological_scorer = "RandomBiologicalScorer",
-                            main_layer = True,
-                            extension = False,
-                            num_workers = 4,
-                            timeout = 5,
-                            individual_cmp_time = 120,
-                            tasks_per_chunk = 1000):
+    def __obtain_move_parallel_with_factory(
+        self,
+        available_rules,
+        chemical_scorer="RandomChemicalScorer",
+        biological_scorer="RandomBiologicalScorer",
+        main_layer=True,
+        extension=False,
+        num_workers=4,
+        timeout=5,
+        individual_cmp_time=120,
+        tasks_per_chunk=1000,
+    ):
         """
         DEPRECATED. Used for parallelisation.
         Used to find applicable rules.
@@ -1022,7 +1108,7 @@ class Compound(object):
         self.logger.info("Starting move obtention process with compound {} ({}) at {}".format(self, self.csmiles, start_time))
 
         if use_cache and self.InChIKey in home_made_cache.keys() and not extension:
-            # If already calculated during this run of the tree, and not extenting moves.
+            # If already calculated during this run of the tree, and not extenting moves.
             matching_moves = home_made_cache[self.InChIKey]
             self.logger.info("Retrieved moves in {} for compound {} - with caching".format(time.time()- start_time, self.InChIKey))
         else:
@@ -1041,12 +1127,6 @@ class Compound(object):
             task_chunks = {}
             indices_chunks = np.array_split(range(len(task_list)), chunks)
 
-            # for i in range(0, len(indices_chunks)):
-            #     task_chunks[i]= [task_list[j] for j in indices_chunks[i].tolist()]
-            # # print(task_chunks.keys())
-            # # print(task_chunks[0])
-            # current_chunk = 0
-
             for i in range(0, len(task_list)):
                 current_team.in_queue.put(task_list[i])
             time.sleep(timeout)
@@ -1054,14 +1134,8 @@ class Compound(object):
             self.logger.info("{} available rules".format(len(sorted_rules)))
             matching_moves = []
             waiting_loops = 0
-            # for task in task_chunks[current_chunk]:
-            #     current_team.in_queue.put(task)
-            # current_chunk = current_chunk + 1
 
             try:
-                # for task in task_chunks[current_chunk]:
-                #     current_team.in_queue.put(task)
-                # current_chunk = current_chunk + 1
                 while True:
                     try:
                         if len(matching_moves) >= self.max_moves:
@@ -1076,8 +1150,8 @@ class Compound(object):
                             # Will need to check here whether it's good or not
                             logging.info("total answer currently is {} for {}".format(matching_moves, self))
                     except Empty:
-                        # time.sleep(timeout)
-                        # print("nothing new")
+                        # time.sleep(timeout)
+                        # print("nothing new")
                         waiting_loops = waiting_loops + 1
 
                         # print('Currently empty')
@@ -1127,8 +1201,8 @@ class Compound(object):
         if use_cache:
             self.logger.info("Caching results for compound {}. The cache contained {}".format(self.InChIKey, len(home_made_cache.keys())))
             home_made_cache[self.InChIKey] = matching_moves
-        self.logger.info("Calculated moves in {} for compound {} - without caching".format(time.time()- start_time, self.InChIKey))
-        return(matching_moves)
+        self.logger.info("Calculated moves in {} for compound {} - without caching".format(time.time() - start_time, self.InChIKey))
+        return matching_moves
 
     def apply_transformation_with_move(self, move):
         """
@@ -1136,9 +1210,9 @@ class Compound(object):
         """
         if move is None:
             self.logger.error("No move is specified")
-            return([])
+            return []
         else:
-            return(move.product_list)
+            return move.product_list
 
     def _get_ECFP(self):
         """
@@ -1149,40 +1223,72 @@ class Compound(object):
         - Size of bit vector will be 1024 (no difference on similarity on my tests but faster)
         """
         if self.ECFP is None:
-            self.ECFP = Chem.AllChem.GetMorganFingerprintAsBitVect(self.rdmol, radius = 2, nBits=1024, useFeatures = False, useChirality = False)
-        return(self.ECFP)
+            self.ECFP = Chem.AllChem.GetMorganFingerprintAsBitVect(
+                self.rdmol, radius=2, nBits=1024, useFeatures=False, useChirality=False
+            )
+        return self.ECFP
+
 
 def __cli():
     """Command line interface for the Compound class"""
     d = "Can check how many rules apply to a compounds and whether a product of interest is present"
     parser = argparse.ArgumentParser(description=d)
     # Logs and saving information
-    parser.add_argument("--verbose", help="Default logger is INFO, switch to DEBUG is specified",
-                        dest='verbose', action='store_true', default=False)
-    parser.add_argument("--log_file", help="Default logger is stderr, switch to log_file if specified",
-                        default=None)
+    parser.add_argument(
+        "--verbose",
+        help="Default logger is INFO, switch to DEBUG is specified",
+        dest="verbose",
+        action="store_true",
+        default=False,
+    )
+    parser.add_argument(
+        "--log_file",
+        help="Default logger is stderr, switch to log_file if specified",
+        default=None,
+    )
     # Compound information
-    parser.add_argument("--c_name", help="Compound name. Defaults to None (InchiKey)",
-                        default=None)
+    parser.add_argument(
+        "--c_name", help="Compound name. Defaults to None (InchiKey)", default=None
+    )
     # One of the next 2 arguments has to be specified to give a target structure.
-    parser.add_argument("--c_smiles", help="Compound smiles", default = None)
-    parser.add_argument("--c_inchi", help="Compound inchi", default = None)
+    parser.add_argument("--c_smiles", help="Compound smiles", default=None)
+    parser.add_argument("--c_inchi", help="Compound inchi", default=None)
 
-    parser.add_argument("--c_smiles_prod", help="Compound smiles looked for in the rules", default = None)
-    parser.add_argument("--c_inchi_prod", help="Compound inchi looked for in the rules", default = None)
+    parser.add_argument(
+        "--c_smiles_prod", help="Compound smiles looked for in the rules", default=None
+    )
+    parser.add_argument(
+        "--c_inchi_prod", help="Compound inchi looked for in the rules", default=None
+    )
     # Timeouts on rdkit processes
-    parser.add_argument("--fire_timeout", help = "Time allowed for firing one rule on one substrate",
-                        type = float, default = 1)
-    parser.add_argument("--standardisation_timeout", help = "Time allowed for standardising results from one application",
-                        type = float, default = 5)
-    parser.add_argument("--expansion_width", help="Maximum number of children", default=5, type=int)
+    parser.add_argument(
+        "--fire_timeout",
+        help="Time allowed for firing one rule on one substrate",
+        type=float,
+        default=1,
+    )
+    parser.add_argument(
+        "--standardisation_timeout",
+        help="Time allowed for standardising results from one application",
+        type=float,
+        default=5,
+    )
+    parser.add_argument(
+        "--expansion_width", help="Maximum number of children", default=5, type=int
+    )
     parser.add_argument("--biological_score_cut_off", default=0.1, type=float)
     parser.add_argument("--substrate_only_score_cut_off", default=0.3, type=float)
     parser.add_argument("--chemical_score_cut_off", default=0.3, type=float)
-    parser.add_argument("--diameter", nargs='+',
-        help="Diameters to consider", default=[16], type=int)
-    parser.add_argument("--EC_filter", nargs='+',
-    help="EC numbers to consider for rules", default=None, type=str)
+    parser.add_argument(
+        "--diameter", nargs="+", help="Diameters to consider", default=[16], type=int
+    )
+    parser.add_argument(
+        "--EC_filter",
+        nargs="+",
+        help="EC numbers to consider for rules",
+        default=None,
+        type=str,
+    )
     args = parser.parse_args()
     # Setting up logs
     if args.verbose:
@@ -1190,72 +1296,95 @@ def __cli():
     else:
         logging_level = logging.INFO
     if args.log_file is None:
-        logging.basicConfig(stream=sys.stderr,
-                            level=logging_level,
-                            datefmt='%d/%m/%Y %H:%M:%S',
-                            format='%(asctime)s -- %(levelname)s -- %(message)s')
+        logging.basicConfig(
+            stream=sys.stderr,
+            level=logging_level,
+            datefmt="%d/%m/%Y %H:%M:%S",
+            format="%(asctime)s -- %(levelname)s -- %(message)s",
+        )
     else:
         if not "log" in args.log_file:
             log_file = "log_" + args.log_file
         else:
             log_file = args.log_file
         log_writer = open("{}/{}".format(log_file), "w")
-        logging.basicConfig(stream=log_writer,
-                            level=logging_level,
-                            datefmt='%d/%m/%Y %H:%M:%S',
-                            format='%(asctime)s -- %(levelname)s -- %(message)s')
+        logging.basicConfig(
+            stream=log_writer,
+            level=logging_level,
+            datefmt="%d/%m/%Y %H:%M:%S",
+            format="%(asctime)s -- %(levelname)s -- %(message)s",
+        )
 
-    rules, biological_scoring = get_rules_and_score(full_rules_forward_H=full_rules_forward_H,
-                                                    full_rules_retro_H=full_rules_retro_H,
-                                                    full_rules_forward_no_H=full_rules_forward_no_H,
-                                                    full_rules_retro_no_H=full_rules_retro_no_H,
-                                                    add_Hs=add_Hs,
-                                                    retro=retrosynthesis,
-                                                    diameters=args.diameter,
-                                                    small=False,
-                                                    c_name=args.c_name,
-                                                    filtering_EC=args.EC_filter)
+    rules, biological_scoring = get_rules_and_score(
+        full_rules_forward_H=full_rules_forward_H,
+        full_rules_retro_H=full_rules_retro_H,
+        full_rules_forward_no_H=full_rules_forward_no_H,
+        full_rules_retro_no_H=full_rules_retro_no_H,
+        add_Hs=add_Hs,
+        retro=retrosynthesis,
+        diameters=args.diameter,
+        small=False,
+        c_name=args.c_name,
+        filtering_EC=args.EC_filter,
+    )
 
     chemical_scoring_configuration = {
         "biological_score_cut_off": args.biological_score_cut_off,
         "substrate_only_score_cut_off": args.substrate_only_score_cut_off,
-        "chemical_score_cut_off": args.chemical_score_cut_off}
+        "chemical_score_cut_off": args.chemical_score_cut_off,
+    }
 
-    biological_score_config = "Using biological cut off at {}".format(args.biological_score_cut_off)
-    substrate_only_score_config = "Using substrate only cut off at {}".format(args.substrate_only_score_cut_off)
-    chemical_score_config = "Using chemical score cut off at {}".format(args.chemical_score_cut_off)
+    biological_score_config = "Using biological cut off at {}".format(
+        args.biological_score_cut_off
+    )
+    substrate_only_score_config = "Using substrate only cut off at {}".format(
+        args.substrate_only_score_cut_off
+    )
+    chemical_score_config = "Using chemical score cut off at {}".format(
+        args.chemical_score_cut_off
+    )
 
-    root_compound = Compound(csmiles = args.c_smiles,
-                            InChI = args.c_inchi,
-                            name = args.c_name,
-                            max_moves = args.expansion_width,
-                            stereo = False,
-                            heavy_standardisation = True,
-                            fire_timeout = args.fire_timeout,
-                            chemical_scoring_configuration = chemical_scoring_configuration,
-                            standardisation_timeout = args.standardisation_timeout)
+    root_compound = Compound(
+        csmiles=args.c_smiles,
+        InChI=args.c_inchi,
+        name=args.c_name,
+        max_moves=args.expansion_width,
+        stereo=False,
+        heavy_standardisation=True,
+        fire_timeout=args.fire_timeout,
+        chemical_scoring_configuration=chemical_scoring_configuration,
+        standardisation_timeout=args.standardisation_timeout,
+    )
     logging.info("Compound of interest is {}".format(root_compound))
 
     if args.c_smiles_prod is None and args.c_inchi_prod is None:
         verifying_product = False
     else:
-        searched_product = Compound(csmiles = args.c_smiles,
-                                InChI = args.c_inchi,
-                                name = args.c_name,
-                                max_moves = args.expansion_width,
-                                stereo = False,
-                                heavy_standardisation = True,
-                                fire_timeout = args.fire_timeout,
-                                chemical_scoring_configuration = chemical_scoring_configuration,
-                                standardisation_timeout = args.standardisation_timeout)
+        searched_product = Compound(
+            csmiles=args.c_smiles,
+            InChI=args.c_inchi,
+            name=args.c_name,
+            max_moves=args.expansion_width,
+            stereo=False,
+            heavy_standardisation=True,
+            fire_timeout=args.fire_timeout,
+            chemical_scoring_configuration=chemical_scoring_configuration,
+            standardisation_timeout=args.standardisation_timeout,
+        )
         verifying_product = True
 
-    moves = root_compound.obtain_applicable_transformation_with_move(available_rules = rules,
-                                            chemical_scorer = "SubandprodChemicalScorer",
-                                            biological_scorer = biological_scoring)
+    moves = root_compound.obtain_applicable_transformation_with_move(
+        available_rules=rules,
+        chemical_scorer="SubandprodChemicalScorer",
+        biological_scorer=biological_scoring,
+    )
     logging.info("Found {} moves with the given settings".format(len(moves)))
     if verifying_product:
-        logging.info("Veryfing {} is in the products of {}".format(searched_product, root_compound))
+        logging.info(
+            "Veryfing {} is in the products of {}".format(
+                searched_product, root_compound
+            )
+        )
         found = False
         for move in moves:
             if searched_product.in_list(move.product_list):
@@ -1263,6 +1392,7 @@ def __cli():
                 found = True
         if not found:
             logging.info("Product {} was not found".format(searched_product))
+
 
 if __name__ == "__main__":
     __cli()
