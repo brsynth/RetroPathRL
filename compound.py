@@ -115,10 +115,21 @@ def _ask_DB(DB_CACHE, DB_REPLACE, rule_id, substrate_id):
     }
 
 
-def _moves_from_rdmols(original_compound, rdmols, move, main_layer,
-                       chemical_scorer, clean_up, stereo, max_moves, fire_timeout,
-                       chemical_scoring_configuration,
-                       rule_id, list_stoechiometry):
+def _moves_from_rdmols(
+    original_compound,
+    rdmols,
+    move,
+    main_layer,
+    chemical_scorer,
+    clean_up,
+    stereo,
+    max_moves,
+    fire_timeout,
+    chemical_scoring_configuration,
+    rule_id,
+    list_stoechiometry,
+    standardisation_timeout,
+):
     """
     Generates Move objects from rdmols (results from rule application)
     """
@@ -147,6 +158,7 @@ def _moves_from_rdmols(original_compound, rdmols, move, main_layer,
                     max_moves=max_moves,
                     fire_timeout=fire_timeout,
                     chemical_scoring_configuration=chemical_scoring_configuration,
+                    standardisation_timeout=standardisation_timeout,
                 )
                 # WARNING: forcing standardisation again due to stereo problems. Advise not to use stereo
                 # Stoechiometry information
@@ -927,6 +939,7 @@ class Compound(object):
                             stereo=self.stereo,
                             max_moves=self.max_moves,
                             fire_timeout=self._fire_timeout,
+                            standardisation_timeout=self.standardisation_timeout,
                             chemical_scoring_configuration=self.chemical_scoring_configuration,
                             rule_id=rule_id,
                             list_stoechiometry=list_stoechiometry,
