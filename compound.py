@@ -66,10 +66,12 @@ def worker_standardisation(kwargs):
     Deprecated. Used when implementing parallelisation.
     Apply standardisation on a compound.
     """
-    ans = standardize_chemical(kwargs["rd_mol"],
-                                add_hs=kwargs["add_Hs"],
-                                rm_stereo=kwargs["rm_stereo"],
-                                heavy = kwargs["heavy_standardisation"])
+    ans = standardize_chemical(
+        kwargs["rd_mol"],
+        add_hs=kwargs["add_Hs"],
+        rm_stereo=kwargs["rm_stereo"],
+        heavy=kwargs["heavy_standardisation"],
+    )
     return ans
 
 
@@ -569,17 +571,19 @@ class Compound(object):
             toxicity = self.toxicity
         except AttributeError:
             toxicity = None
-        return(Compound(rdkit_obj = self.rdmol,
-                        name = self.name,
-                        stereo = self.stereo,
-                        synonyms = self.synonyms,
-                        synonyms_names =self.synonyms_names,
-                        max_moves = self.max_moves,
-                        single_worker = self.single_worker,
-                        fire_timeout = self._fire_timeout,
-                        chemical_scoring_configuration = self.chemical_scoring_configuration,
-                        standardisation_timeout = self.standardisation_timeout,
-                        toxicity = toxicity))
+        return Compound(
+            rdkit_obj=self.rdmol,
+            name=self.name,
+            stereo=self.stereo,
+            synonyms=self.synonyms,
+            synonyms_names=self.synonyms_names,
+            max_moves=self.max_moves,
+            single_worker=self.single_worker,
+            fire_timeout=self._fire_timeout,
+            chemical_scoring_configuration=self.chemical_scoring_configuration,
+            standardisation_timeout=self.standardisation_timeout,
+            toxicity=toxicity,
+        )
 
     def naming(self, name):
         """Allows for renaming, mostly when a state is initialised with a list"""
@@ -594,6 +598,7 @@ class Compound(object):
         if compound.csmiles not in self.synonyms:
             self.synonyms.append(compound.csmiles)
             self.synonyms_names.append(compound.name)
+
     def add_synonym_by_name(self, new_name):
         """
         Adds a synonym to this compound.
@@ -756,7 +761,7 @@ class Compound(object):
 
     def _apply_rule(self, rule_id, rd_rule):
         application_time_start = time.time()
-        self.logger.debug("Applying rule {} on {} -{} at {}".format(rule_id, self, self.csmiles, time.time()))
+        self.logger.debug("Applying rule {} on {} - {} at {}".format(rule_id, self, self.csmiles, time.time()))
         if self.single_worker:
             try:
                 kwargs = {

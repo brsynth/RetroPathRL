@@ -1466,9 +1466,9 @@ def __cli():
     else:
         stop_mode_config = "Full search - no stopping at first result"
     # Minimal visits
-    minimal_visit_counts_config = "Setting the minimal visit count for a node at {}".format(args.minimal_visit_counts)
+    minimal_visit_counts_config = f"Setting the minimal visit count for a node at {args.minimal_visit_counts}"
     # RAVE_config
-    RAVE_config = "Using RAVE: {}".format(args.use_RAVE)
+    RAVE_config = f"Using RAVE: {args.use_RAVE}"
     # Scoring configuration
     chemical_scoring = args.chemical_scoring
     chemical_scoring_configuration = {
@@ -1476,9 +1476,9 @@ def __cli():
         "substrate_only_score_cut_off": args.substrate_only_score_cut_off,
         "chemical_score_cut_off": args.chemical_score_cut_off}
 
-    biological_score_config = "Using biological cut off at {}".format(args.biological_score_cut_off)
-    substrate_only_score_config = "Using substrate only cut off at {}".format(args.substrate_only_score_cut_off)
-    chemical_score_config = "Using chemical score cut off at {}".format(args.chemical_score_cut_off)
+    biological_score_config = f"Using biological cut off at {args.biological_score_cut_off}"
+    substrate_only_score_config = f"Using substrate only cut off at {args.substrate_only_score_cut_off}"
+    chemical_score_config = f"Using chemical score cut off at {args.chemical_score_cut_off}"
 
     # Setting chemistry info
     logging.info("Stating global parameters from configuration file")
@@ -1567,7 +1567,7 @@ def __cli():
             else:
                 search_tree = unpickle(file_name=args.tree_to_complete,
                                        type='tree',
-                                       folder_address="{}/pickles".format(args.folder_tree_to_complete))
+                                       folder_address=f"{args.folder_tree_to_complete}/pickles")
                 # Check compound compatibility
                 current_root_state = search_tree.root_state
                 try:
@@ -1644,7 +1644,7 @@ def __cli():
         logging.warning("RECAP NUMBER_ITERATION={}".format(loading_recap["NUMBER_ITERATION"]))
 
     # Exporting information on obtained results
-    with open("{}/results.csv".format(folder_to_save), "w") as csv_file:
+    with open(f"{folder_to_save}/results.csv", "w") as csv_file:
         csv_writer = csv.DictWriter(csv_file, fieldnames=["parameter", "value"])
         csv_writer.writeheader()
         csv_writer.writerow({"parameter": "stop_at_first_result", "value": args.stop_at_first_result})
@@ -1687,11 +1687,11 @@ def __cli():
         csv_writer.writerow({"parameter": "STOP_REASON", "value": recap["STOP_REASON"]})
         csv_writer.writerow({"parameter": "NUMBER_ITERATION", "value": recap["NUMBER_ITERATION"]})
 
-    with open("{}/{}_results".format(folder_to_save, nbr), "w") as results_file:
+    with open(f"{folder_to_save}/{nbr}_results", "w") as results_file:
         # Only printing out results numbers.
         pass
 
 
 if __name__ == "__main__":
-    from Tree import *
+    # from Tree import *
     __cli()
