@@ -1222,13 +1222,15 @@ def __cli():
     # Timeouts on rdkit processes
     parser.add_argument(
         "--fire_timeout",
-        help="Time allowed for firing one rule on one substrate",
+        help="Time allowed for firing one rule on one substrate. If -1, no timeout. Default: %(default)s",
+        metavar="SECONDS",
         type=float,
         default=1,
     )
     parser.add_argument(
         "--standardisation_timeout",
-        help="Time allowed for standardising results from one application",
+        help="Time allowed for standardising results from one application. If -1, no timeout. Default: %(default)s",
+        metavar="SECONDS",
         type=float,
         default=5,
     )

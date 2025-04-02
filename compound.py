@@ -61,6 +61,7 @@ if use_toxicity:
 # The recursion limit was raised for pickling of Trees.
 sys.setrecursionlimit(50000)
 
+
 def worker_standardisation(kwargs):
     """
     Deprecated. Used when implementing parallelisation.
@@ -680,6 +681,17 @@ class Compound(object):
 
         return ans, exec_time
 
+    def _run_without_timeout(self, worker, kwargs):
+        """Generic wrapper to run a function without timeout.
+
+        This function is basically the counterpart of the _run_with_timeout function.
+        """
+        start_time = time.time()
+        ans = worker(kwargs)
+        end_time = time.time()
+        exec_time = round(end_time - start_time, 4)
+        return ans, exec_time
+
     def _get_Biological_scorer(self, biological_scorer):
         if biological_scorer == "RandomBiologicalScorer":
             policy = RandomBiologicalScorer
@@ -768,10 +780,18 @@ class Compound(object):
                         'rd_rule': rd_rule,
                         'rd_mol':  self.rdmol
                         }
-                ans, fire_exec_time = self._run_with_timeout(
-                        worker=worker_fire, kwargs=kwargs,
-                        timeout=self._fire_timeout
-                        )
+                # Disable the timeout handling if not needed
+                if self._fire_timeout == -1:
+                    ans, fire_exec_time = self._run_without_timeout(
+                        worker=worker_fire,
+                        kwargs=kwargs,
+                    )
+                else:
+                    ans, fire_exec_time = self._run_with_timeout(
+                        worker=worker_fire,
+                        kwargs=kwargs,
+                        timeout=self._fire_timeout,
+                    )
             except ChemConversionError as e:
                 ans = None
                 fire_error = str(e)
@@ -858,7 +878,18 @@ class Compound(object):
                               "rm_stereo": not self.stereo
                               }
                         try:
-                            ans, exec_time = self._run_with_timeout(worker_standard_results, kwargs_standard, timeout=self.standardisation_timeout)
+                            # Disable the timeout handling if not needed
+                            if self.standardisation_timeout == -1:
+                                ans, exec_time = self._run_without_timeout(
+                                    worker_standard_results,
+                                    kwargs_standard,
+                                )
+                            else:
+                                ans, exec_time = self._run_with_timeout(
+                                    worker_standard_results,
+                                    kwargs_standard,
+                                    timeout=self.standardisation_timeout,
+                                )
                             rdmols, failed = ans
                         except TimeoutError as e:
                             self.logger.warning(e)
