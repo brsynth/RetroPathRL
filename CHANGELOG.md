@@ -1,3 +1,20 @@
+## Unreleased
+
+### Feat
+
+- enables execution without fire timeout
+- **Tree**: refine debug logging
+
+### Fix
+
+- **compound**: use standardisation timeout ti new compounds
+- **Tree**: timeout arguments as int
+- further restrict rdkit version (reproducibility issue #21)
+
+### Refactor
+
+- **Tree**: remove unused code
+
 ## 1.0.1 (2024-06-20)
 
 ### Fix
